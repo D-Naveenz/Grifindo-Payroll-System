@@ -13,8 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using GrifindoPS.config;
-
 namespace GrifindoPS
 {
     /// <summary>
@@ -25,9 +23,6 @@ namespace GrifindoPS
         public MainWindow()
         {
             InitializeComponent();
-
-            Config cnfig = new Config();
-            DBConnection cnn = new(cnfig.db_config);
         }
     }
 }
