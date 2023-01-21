@@ -23,14 +23,14 @@ namespace GrifindoPS.Data.Models
 
             Id = "";
             Name = "";
-            Title = new();
+            Role = new();
             BOD = DateTime.Now.Date;
             Gender = Gender.Male;
         }
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public JobTitle Title { get; set; }
+        public Role Role { get; set; }
         public DateTime BOD { get; set; }
         public Gender Gender { get; set; }
         public string? Address { get; set; }

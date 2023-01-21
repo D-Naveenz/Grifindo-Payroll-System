@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace GrifindoPS.Data.Models
 {
-    public class JobTitle
+    public class Role
     {
-        public JobTitle()
+        private readonly List<Employee> _employees;
+
+        public Role()
         {
+            _employees = new();
+
             Title = "";
             EditUserData = false;
             SeeEmpData = false;
