@@ -20,6 +20,16 @@ namespace GrifindoPS.Data.Models
             EditEmpData = false;
         }
 
+        public Role(string title, bool editUserData, bool seeEmpData, bool editEmpData)
+        {
+            _employees = new();
+
+            Title = title;
+            EditUserData = editUserData;
+            SeeEmpData = seeEmpData;
+            EditEmpData = editEmpData;
+        }
+
         public string Title { get; set; }
         public bool EditUserData { get; set; }
         public bool SeeEmpData { get; set; }

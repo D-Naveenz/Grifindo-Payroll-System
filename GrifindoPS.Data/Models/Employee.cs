@@ -28,6 +28,21 @@ namespace GrifindoPS.Data.Models
             Gender = Gender.Male;
         }
 
+        public Employee(string id, string name, Role role, DateTime bOD, Gender gender, string? address, string? phoneNo, string? email)
+        {
+            _salary = new();
+            _leaves = new List<Leaves>();
+            
+            Id = id;
+            Name = name;
+            Role = role;
+            BOD = bOD;
+            Gender = gender;
+            Address = address;
+            PhoneNo = phoneNo;
+            Email = email;
+        }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public Role Role { get; set; }
