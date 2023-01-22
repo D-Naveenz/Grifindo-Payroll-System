@@ -1,4 +1,5 @@
-﻿using GrifindoPS.Data.Models;
+﻿using GrifindoPS.Commands;
+using GrifindoPS.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace GrifindoPS.ViewModels
         private string _id = string.Empty;
         private string _name = string.Empty;
         private string _role = string.Empty;
-        private DateTime _bod;
-        private Gender _gender;
+        private DateTime _bod = new(2000, 1, 1);
+        private Gender _gender = Gender.Male;
         private string _address = string.Empty;
         private string _phone = string.Empty;
         private string _email = string.Empty;
@@ -23,13 +24,41 @@ namespace GrifindoPS.ViewModels
         private float _otRate;
         private float _allowance;
 
-        public EmployeeDetailsViewModel()
+        public EmployeeDetailsViewModel(Employee? _employee = null)
         {
+            if (_employee == null)
+            {
+                // Setup to the registration
+                SubmitName = "Register";
+                Employee = new();
+                SubmitCommand = new RegisterEmployeeCommand(this);
+            } else
+            {
+                // Setup to the update
+                SubmitName = "Update";
+                Employee = _employee;
+                SubmitCommand = new UpdateEmployeeCommand(this);
+            }
+
+            LeavesCommand = new EmployeeLeavesCommand(this);
+            CancelCommand = new CancelEmployeeDetailsCommand();
         }
 
-        //private int _absent;
-        //private float _basePay;
-        //private float _grossPay;
+        public void Reset()
+        {
+            _id = string.Empty;
+            _name = string.Empty;
+            _role = string.Empty;
+            _bod = new(2000, 1, 1);
+            _gender = Gender.Male;
+            _address = string.Empty;
+            _phone = string.Empty;
+            _email = string.Empty;
+
+            _monthlySalary = 0;
+            _otRate = 0;
+            _allowance = 0;
+        }
 
         public string Id
         {
@@ -184,5 +213,9 @@ namespace GrifindoPS.ViewModels
         public ICommand SubmitCommand { get; }
 
         public ICommand CancelCommand { get; }
+
+        public string SubmitName { get; }
+
+        public Employee Employee { get; }
     }
 }

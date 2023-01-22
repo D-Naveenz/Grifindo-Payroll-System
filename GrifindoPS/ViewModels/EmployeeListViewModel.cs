@@ -33,8 +33,8 @@ namespace GrifindoPS.ViewModels
             _employees = new ObservableCollection<EmployeeViewModel>
             {
                 // For Debugging
-                new EmployeeViewModel(new Employee("0001", "Naveen", new Role("Admin", true, true, true), DateTime.Now, Gender.Male, "", "", "")),
-                new EmployeeViewModel(new Employee("0002", "Sunil", new Role("User", false, false, false), DateTime.Now, Gender.Female, "", "", ""))
+                new EmployeeViewModel(new Employee("0001", "Naveen", new Role("Admin", true, true, true), DateTime.Now, Gender.Male)),
+                new EmployeeViewModel(new Employee("0002", "Sunil", new Role("User", false, false, false), DateTime.Now, Gender.Female))
             };
         }
 

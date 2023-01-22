@@ -12,7 +12,7 @@ namespace GrifindoPS.ViewModels
 
         public MainViewModel()
         {
-            CurrentViewModel = new EmployeeListViewModel();
+            CurrentViewModel = new EmployeeDetailsViewModel();
         }
     }
 }

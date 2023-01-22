@@ -146,7 +146,7 @@
                 </Style>
             </StackPanel.Resources>
             <Button x:Name="btnCancel" Content="Cancel" Command="{Binding SubmitCommand}"/>
-            <Button x:Name="btnAction" Content="Submit" Command="{Binding CancelCommand}"/>
+            <Button x:Name="btnAction" Content="{Binding SubmitName}" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

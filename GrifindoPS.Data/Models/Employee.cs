@@ -28,7 +28,7 @@ namespace GrifindoPS.Data.Models
             Gender = Gender.Male;
         }
 
-        public Employee(string id, string name, Role role, DateTime bOD, Gender gender, string? address, string? phoneNo, string? email)
+        public Employee(string id, string name, Role role, DateTime bOD, Gender gender, string? address = null, string? phoneNo = null, string? email = null)
         {
             _salary = new();
             _leaves = new List<Leaves>();

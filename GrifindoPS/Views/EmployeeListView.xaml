@@ -17,7 +17,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Label Content="Search: " VerticalAlignment="Center" Margin="0,0,6,0"/>
             <TextBox TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Stretch" MinWidth="400"/>
-            <Button Content="Button" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            <Button Content="Search" Margin="12,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
         <ListView Grid.Row="1" ItemsSource="{Binding Employees}">
@@ -32,7 +32,7 @@
                     <GridViewColumn Header="Employee ID">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Id}"/>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Id}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

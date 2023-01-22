@@ -58,7 +58,7 @@
                 </Style>
             </StackPanel.Resources>
             <Button x:Name="btnCancel" Content="Cancel"/>
-            <Button x:Name="btnAction" Content="Register / Update"/>
+            <Button x:Name="btnAction" Content="Submit"/>
         </StackPanel>
     </Grid>
 </UserControl>
