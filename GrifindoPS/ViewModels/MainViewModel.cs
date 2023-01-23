@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GrifindoPS.Stores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,19 @@ namespace GrifindoPS.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        public ViewModelBase CurrentViewModel { get; set; }
+        private NavigationStore _navigationStore;
 
-        public MainViewModel()
+        public MainViewModel(NavigationStore navigationStore)
         {
-            CurrentViewModel = new EmployeeDetailsViewModel();
+            _navigationStore = navigationStore;
+            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }
+
+        private void OnCurrentViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentViewModel));
+        }
+
+        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
     }
 }

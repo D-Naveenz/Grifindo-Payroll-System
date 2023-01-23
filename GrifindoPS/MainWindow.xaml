@@ -8,6 +8,15 @@
         Title="MainWindow" Height="450" Width="800"
         FontSize="14">
     <Grid>
-        <views:EmployeeDetailsView DataContext="{Binding CurrentViewModel}" />
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewmodels:EmployeeListViewModel}">
+                <views:EmployeeListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:EmployeeDetailsViewModel}">
+                <views:EmployeeDetailsView />
+            </DataTemplate>
+        </Grid.Resources>
+
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>

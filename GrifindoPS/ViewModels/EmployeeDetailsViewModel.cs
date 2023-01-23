@@ -1,5 +1,7 @@
 ﻿using GrifindoPS.Commands;
 using GrifindoPS.Data.Models;
+using GrifindoPS.Services;
+using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +26,9 @@ namespace GrifindoPS.ViewModels
         private float _otRate;
         private float _allowance;
 
-        public EmployeeDetailsViewModel(Employee? _employee = null)
+        public EmployeeDetailsViewModel(NavigationService empDetailsNavigationService, Employee? employee = null)
         {
-            if (_employee == null)
+            if (employee == null)
             {
                 // Setup to the registration
                 SubmitName = "Register";
@@ -36,12 +38,12 @@ namespace GrifindoPS.ViewModels
             {
                 // Setup to the update
                 SubmitName = "Update";
-                Employee = _employee;
+                Employee = employee;
                 SubmitCommand = new UpdateEmployeeCommand(this);
             }
 
             LeavesCommand = new EmployeeLeavesCommand(this);
-            CancelCommand = new CancelEmployeeDetailsCommand();
+            CancelCommand = new NavigationCommand(empDetailsNavigationService);
         }
 
         public void Reset()

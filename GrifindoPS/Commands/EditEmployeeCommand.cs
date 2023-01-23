@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace GrifindoPS.Commands
 {
-    public class CancelEmployeeDetailsCommand : CommandBase
+    public class EditEmployeeCommand : CommandBase
     {
-        // TODO
         public override void Execute(object? parameter)
         {
             throw new NotImplementedException();

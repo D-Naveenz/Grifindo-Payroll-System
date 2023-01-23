@@ -1,10 +1,14 @@
-﻿using GrifindoPS.Data.Models;
+﻿using GrifindoPS.Commands;
+using GrifindoPS.Data.Models;
+using GrifindoPS.Services;
+using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace GrifindoPS.ViewModels
 {
@@ -25,10 +29,10 @@ namespace GrifindoPS.ViewModels
         public string Email => _employee.Email?.ToString() ?? "N/A";
     }
 
-    public class EmployeeListViewModel : DataListViewModel
+    public class EmployeeListViewModel : ViewModelBase
     {
         private readonly ObservableCollection<EmployeeViewModel> _employees;
-        public EmployeeListViewModel()
+        public EmployeeListViewModel(NavigationService empListNavigationService)
         {
             _employees = new ObservableCollection<EmployeeViewModel>
             {
@@ -36,8 +40,18 @@ namespace GrifindoPS.ViewModels
                 new EmployeeViewModel(new Employee("0001", "Naveen", new Role("Admin", true, true, true), DateTime.Now, Gender.Male)),
                 new EmployeeViewModel(new Employee("0002", "Sunil", new Role("User", false, false, false), DateTime.Now, Gender.Female))
             };
+            
+            AddCommand = new NavigationCommand(empListNavigationService);
+            EditCommand = new EditEmployeeCommand();
+            DeleteCommand = new DeleteEmployeeCommand();
         }
 
         public IEnumerable<EmployeeViewModel> Employees => _employees;
+
+        public ICommand AddCommand { get; }
+
+        public ICommand EditCommand { get; }
+
+        public ICommand DeleteCommand { get; }
     }
 }

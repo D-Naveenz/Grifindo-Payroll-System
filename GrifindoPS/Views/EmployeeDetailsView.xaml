@@ -145,8 +145,8 @@
                     <Setter Property="Padding" Value="10,4"/>
                 </Style>
             </StackPanel.Resources>
-            <Button x:Name="btnCancel" Content="Cancel" Command="{Binding SubmitCommand}"/>
-            <Button x:Name="btnAction" Content="{Binding SubmitName}" Command="{Binding CancelCommand}"/>
+            <Button x:Name="btnCancel" Content="Cancel" Command="{Binding CancelCommand}"/>
+            <Button x:Name="btnAction" Content="{Binding SubmitName}" Command="{Binding SubmitCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>
