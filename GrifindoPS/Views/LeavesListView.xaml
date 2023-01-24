@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GrifindoPS.Views"
+             xmlns:local="clr-namespace:GrifindoPS.Views" xmlns:viewmodels="clr-namespace:GrifindoPS.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:LeavesListViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="25,0,25,12">
@@ -20,7 +20,39 @@
             <Button Content="Button" Margin="12,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Grid.Row="1"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding Leaves}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Date">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Date}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Description">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Description}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Approval">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Approval}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" FlowDirection="RightToLeft" Margin="0,18,0,10" VerticalAlignment="Bottom">
             <StackPanel.Resources>
@@ -29,9 +61,10 @@
                     <Setter Property="Padding" Value="10,4"/>
                 </Style>
             </StackPanel.Resources>
-            <Button x:Name="btnDelete" Content="Delete"/>
-            <Button x:Name="btnEdit" Content="Edit"/>
-            <Button x:Name="btnAdd" Content="Add"/>
+            <Button Content="Back" Command="{Binding BackCommand}"/>
+            <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+            <Button Content="Edit" Command="{Binding EditCommand}"/>
+            <Button Content="Add" Command="{Binding AddCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

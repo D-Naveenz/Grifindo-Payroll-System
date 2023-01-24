@@ -9,15 +9,15 @@ using System.Windows;
 
 namespace GrifindoPS.Commands
 {
-    public class RegisterEmployeeCommand : CommandBase
+    internal class EmployeeUpdateCommand : CommandBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
         private readonly Employee _employee;
 
-        public RegisterEmployeeCommand(EmployeeDetailsViewModel employeeDetailsViewModel)
+        public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel)
         {
-            this._employeeDetailsViewModel = employeeDetailsViewModel;
-            this._employee = new();
+            _employeeDetailsViewModel = employeeDetailsViewModel;
+            _employee = new();
         }
 
         public override void Execute(object? parameter)

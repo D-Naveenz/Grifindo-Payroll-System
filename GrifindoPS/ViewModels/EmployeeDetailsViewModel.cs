@@ -1,49 +1,77 @@
 ﻿using GrifindoPS.Commands;
 using GrifindoPS.Data.Models;
 using GrifindoPS.Services;
-using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GrifindoPS.ViewModels
 {
-    public class EmployeeDetailsViewModel : ViewModelBase
+    internal class EmployeeDetailsViewModel : ViewModelBase
     {
+        private Employee? _employee;
+        private Salary _salary;
+        private ObservableCollection<string> _roles;
         private string _id = string.Empty;
         private string _name = string.Empty;
         private string _role = string.Empty;
         private DateTime _bod = new(2000, 1, 1);
-        private Gender _gender = Gender.Male;
-        private string _address = string.Empty;
-        private string _phone = string.Empty;
-        private string _email = string.Empty;
+        private string _gender = "Male";
+        private string? _address;
+        private string? _phone;
+        private string? _email;
 
         private float _monthlySalary;
         private float _otRate;
         private float _allowance;
 
-        public EmployeeDetailsViewModel(NavigationService empDetailsNavigationService, Employee? employee = null)
+        public EmployeeDetailsViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
         {
-            if (employee == null)
+            _employee = Config.Instance.CurrentEmployee;
+            
+            if (_employee == null)
             {
                 // Setup to the registration
                 SubmitName = "Register";
-                Employee = new();
-                SubmitCommand = new RegisterEmployeeCommand(this);
-            } else
+                _employee = new();
+                _salary = new();
+                SubmitCommand = new EmployeeRegisterCommand(this, empListNavigationService);
+            }
+            else
             {
                 // Setup to the update
                 SubmitName = "Update";
-                Employee = employee;
-                SubmitCommand = new UpdateEmployeeCommand(this);
+                _salary = _employee.Salary;
+
+                _id = _employee.Id;
+                _name = _employee.Name;
+                _role = _employee.Role;
+                _bod = _employee.BOD;
+                _gender = _employee.Gender;
+                _address = _employee.Address;
+                _phone = _employee.PhoneNo;
+                _email = _employee.Email;
+
+                _monthlySalary = _salary.MonthlySalary;
+                _otRate = _salary.OtRate;
+                _allowance = _salary.Allowance;
+
+                SubmitCommand = new EmployeeUpdateCommand(this);
             }
 
-            LeavesCommand = new EmployeeLeavesCommand(this);
-            CancelCommand = new NavigationCommand(empDetailsNavigationService);
+            _roles = new()
+            {
+                "Admin",
+                "Manager",
+                "Staff"
+            };
+            LeavesCommand = new EmployeeLeavesCommand(this, leavesNavigationService);
+            CancelCommand = new NavigationCommand(empListNavigationService);
         }
 
         public void Reset()
@@ -52,7 +80,7 @@ namespace GrifindoPS.ViewModels
             _name = string.Empty;
             _role = string.Empty;
             _bod = new(2000, 1, 1);
-            _gender = Gender.Male;
+            //_gender = Gender.Male;
             _address = string.Empty;
             _phone = string.Empty;
             _email = string.Empty;
@@ -112,8 +140,8 @@ namespace GrifindoPS.ViewModels
                 }
             }
         }
-
-        public Gender Gender
+        
+        public string Gender
         {
             get { return _gender; }
             set
@@ -126,7 +154,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public string Address
+        public string? Address
         {
             get { return _address; }
             set
@@ -139,7 +167,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public string Phone
+        public string? Phone
         {
             get { return _phone; }
             set
@@ -152,7 +180,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public string Email
+        public string? Email
         {
             get { return _email; }
             set
@@ -218,6 +246,10 @@ namespace GrifindoPS.ViewModels
 
         public string SubmitName { get; }
 
-        public Employee Employee { get; }
+        public Employee? Employee => _employee;
+
+        public Salary Salary => _salary;
+
+        public IEnumerable<string> Roles => _roles;
     }
 }

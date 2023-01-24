@@ -1,6 +1,4 @@
 ﻿using GrifindoPS.Services;
-using GrifindoPS.Stores;
-using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

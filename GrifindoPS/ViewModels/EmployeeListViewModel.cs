@@ -1,49 +1,49 @@
 ﻿using GrifindoPS.Commands;
 using GrifindoPS.Data.Models;
 using GrifindoPS.Services;
-using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GrifindoPS.ViewModels
 {
-    public class EmployeeViewModel : ViewModelBase
-    {
-        private readonly Employee _employee;
-
-        public EmployeeViewModel(Employee employee)
-        {
-            _employee = employee;
-        }
-
-        public string Id => _employee.Id;
-        public string Name => _employee.Name;
-        public string Role => _employee.Role.Title;
-        public string Gender => _employee.Gender.ToString();
-        public string PhoneNo => _employee.PhoneNo?.ToString() ?? "N/A";
-        public string Email => _employee.Email?.ToString() ?? "N/A";
-    }
-
-    public class EmployeeListViewModel : ViewModelBase
+    internal class EmployeeListViewModel : ViewModelBase
     {
         private readonly ObservableCollection<EmployeeViewModel> _employees;
-        public EmployeeListViewModel(NavigationService empListNavigationService)
+        private readonly Config _config;
+
+        private EmployeeViewModel? _selectedEmployeeViewModel;
+        
+        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
         {
-            _employees = new ObservableCollection<EmployeeViewModel>
+            _config = Config.Instance;
+            _employees = new ObservableCollection<EmployeeViewModel>();
+
+            _config.CurrentEmployee = null;
+            UpdateEmployees();
+
+            AddCommand = new NavigationCommand(empDetailsNavigationService);
+            EditCommand = new EmployeeEditCommand(this, empDetailsNavigationService);
+            DeleteCommand = new EmployeeDeleteCommand(this, viewModelRefreshService);
+        }
+
+        private void UpdateEmployees()
+        {
+            _employees.Clear();
+            foreach (var employee in _config.Employees)
             {
-                // For Debugging
-                new EmployeeViewModel(new Employee("0001", "Naveen", new Role("Admin", true, true, true), DateTime.Now, Gender.Male)),
-                new EmployeeViewModel(new Employee("0002", "Sunil", new Role("User", false, false, false), DateTime.Now, Gender.Female))
-            };
-            
-            AddCommand = new NavigationCommand(empListNavigationService);
-            EditCommand = new EditEmployeeCommand();
-            DeleteCommand = new DeleteEmployeeCommand();
+                _employees.Add(new EmployeeViewModel(employee));
+            }
+        }
+
+        internal void RefreshList()
+        {
+            OnPropertyChanged(nameof(Employees));
         }
 
         public IEnumerable<EmployeeViewModel> Employees => _employees;
@@ -53,5 +53,15 @@ namespace GrifindoPS.ViewModels
         public ICommand EditCommand { get; }
 
         public ICommand DeleteCommand { get; }
+
+        public EmployeeViewModel? SelectedEmployeeViewModel
+        {
+            get { return _selectedEmployeeViewModel; }
+            set
+            {
+                _selectedEmployeeViewModel = value;
+                OnPropertyChanged(nameof(SelectedEmployeeViewModel));
+            }
+        }
     }
 }

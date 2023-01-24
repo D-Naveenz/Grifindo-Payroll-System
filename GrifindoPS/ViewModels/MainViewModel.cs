@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GrifindoPS.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    internal class MainViewModel : ViewModelBase
     {
         private NavigationStore _navigationStore;
 

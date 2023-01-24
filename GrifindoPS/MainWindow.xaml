@@ -15,6 +15,9 @@
             <DataTemplate DataType="{x:Type viewmodels:EmployeeDetailsViewModel}">
                 <views:EmployeeDetailsView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LeavesListViewModel}">
+                <views:LeavesListView />
+            </DataTemplate>
         </Grid.Resources>
 
         <ContentControl Content="{Binding CurrentViewModel}" />

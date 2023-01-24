@@ -1,4 +1,5 @@
-﻿using GrifindoPS.Services;
+﻿using GrifindoPS.Data.Models;
+using GrifindoPS.Services;
 using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using System;
@@ -38,12 +39,17 @@ namespace GrifindoPS
 
         private EmployeeDetailsViewModel CreateEmpDetailsViewModel()
         {
-            return new EmployeeDetailsViewModel(new NavigationService(_navigationStore, CreateEmpListViewModel));
+            return new EmployeeDetailsViewModel(new NavigationService(_navigationStore, CreateEmpListViewModel), new NavigationService(_navigationStore, CreateLeavesListViewModel));
         }
-
+        
         private EmployeeListViewModel CreateEmpListViewModel()
         {
-            return new EmployeeListViewModel(new NavigationService(_navigationStore, CreateEmpDetailsViewModel));
+            return new EmployeeListViewModel(new NavigationService(_navigationStore, CreateEmpDetailsViewModel), new NavigationService(_navigationStore, CreateEmpListViewModel));
+        }
+
+        private LeavesListViewModel CreateLeavesListViewModel()
+        {
+            return new LeavesListViewModel(new NavigationService(_navigationStore, CreateEmpDetailsViewModel));
         }
     }
 }

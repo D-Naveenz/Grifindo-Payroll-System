@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GrifindoPS.Commands
 {
-    public class EditEmployeeCommand : CommandBase
+    internal class LeaveAddCommand : CommandBase
     {
         public override void Execute(object? parameter)
         {
