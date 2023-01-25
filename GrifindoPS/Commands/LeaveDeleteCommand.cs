@@ -1,4 +1,7 @@
-﻿using GrifindoPS.Services;
+﻿using GrifindoPS.Models;
+using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
+using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,15 +14,16 @@ namespace GrifindoPS.Commands
 {
     internal class LeaveDeleteCommand : CommandBase
     {
-        private readonly Config _config;
+        private readonly ConfigStore _config = ConfigStore.Instance;
         private readonly LeavesListViewModel _leavesListViewModel;
         private readonly NavigationService _viewModelRefreshService;
+        private readonly IDataService<Leave>? _leaveDataService;
 
         public LeaveDeleteCommand(LeavesListViewModel leavesListViewModell, NavigationService viewModelRefreshService)
         {
-            _config = Config.Instance;
             _leavesListViewModel = leavesListViewModell;
             _viewModelRefreshService = viewModelRefreshService;
+            _leaveDataService = _config.LeaveDataService;
 
             leavesListViewModell.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -31,9 +35,9 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            if (_leavesListViewModel.SelectedLeave != null && _config.CurrentEmployee != null)
+            if (_leavesListViewModel.SelectedLeave != null && _leaveDataService != null)
             {
-                _config.CurrentEmployee.RemoveLeave(_leavesListViewModel.SelectedLeave);
+                _leaveDataService.Delete(_leavesListViewModel.SelectedLeave);
                 _viewModelRefreshService.Navigate();
             }
         }

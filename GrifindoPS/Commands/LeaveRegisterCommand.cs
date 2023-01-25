@@ -1,6 +1,8 @@
 ﻿using GrifindoPS.Exceptions;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
+using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,15 +16,15 @@ namespace GrifindoPS.Commands
 {
     internal class LeaveRegisterCommand : CommandBase
     {
-        private readonly Config _config;
         private readonly LeavesDetailsViewModel _leavesDetailsViewModel;
         private readonly NavigationService _leavesListNavigationService;
+        private readonly IDataService<Leave>? _leaveDataService;
 
         public LeaveRegisterCommand(LeavesDetailsViewModel leavesDetailsViewModel, NavigationService leavesListNavigationService)
         {
-            _config = Config.Instance;
             _leavesDetailsViewModel = leavesDetailsViewModel;
             _leavesListNavigationService = leavesListNavigationService;
+            _leaveDataService = ConfigStore.Instance.LeaveDataService;
 
             leavesDetailsViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -34,26 +36,27 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            if (_config.CurrentEmployee != null)
-            {
-                try
-                {
-                    _config.CurrentEmployee.AddLeave(
-                        new(
-                            _config.CurrentEmployee,
-                            _leavesDetailsViewModel.Date.Date,
-                            _leavesDetailsViewModel.Description,
-                            _leavesDetailsViewModel.Approval
-                            )
-                        );
+            Leave leave = new(
+                _leavesDetailsViewModel.Date.Date,
+                _leavesDetailsViewModel.Description,
+                _leavesDetailsViewModel.Approval,
+                ConfigStore.Instance.CurrentEmployee
+                );
 
-                    MessageBox.Show("The leave is successfully added.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            try
+            {
+                if (_leaveDataService != null)
+                {
+                    _leaveDataService.Add(leave);
+                    ConfigStore.Instance.CurrentLeave = leave;
+
+                    MessageBox.Show("The leave is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     _leavesListNavigationService.Navigate();
                 }
-                catch (RecordAlreadyExistingException)
-                {
-                    MessageBox.Show("The leave data is already existing.", "GrifindoPS: Error - Resource Conflict", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+            catch (RecordAlreadyExistingException)
+            {
+                MessageBox.Show("The leave is already existing.", "GrifindoPS: Error - Resource Conflict", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

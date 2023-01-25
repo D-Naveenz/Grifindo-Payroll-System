@@ -1,6 +1,9 @@
 ﻿using GrifindoPS.Commands;
+using GrifindoPS.DBContexts;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Stores;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,14 +18,15 @@ namespace GrifindoPS.ViewModels
     internal class EmployeeListViewModel : ViewModelBase
     {
         private readonly ObservableCollection<EmployeeViewModel> _employees;
-        private readonly Config _config;
-
+        private readonly ConfigStore _config = ConfigStore.Instance;
+        private readonly GrifindoDBContextFactory _grifindoDBContextFactory;
         private EmployeeViewModel? _selectedEmployeeViewModel;
         
-        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
+        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService, GrifindoDBContextFactory grifindoDBContextFactory)
         {
-            _config = Config.Instance;
+
             _employees = new ObservableCollection<EmployeeViewModel>();
+            _grifindoDBContextFactory = grifindoDBContextFactory;
 
             _config.CurrentEmployee = null;
             UpdateEmployees();
@@ -35,7 +39,8 @@ namespace GrifindoPS.ViewModels
         private void UpdateEmployees()
         {
             _employees.Clear();
-            foreach (var employee in _config.Employees)
+            using GrifindoDBContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
+            foreach (Employee employee in _dbContext.Employees)
             {
                 _employees.Add(new EmployeeViewModel(employee));
             }

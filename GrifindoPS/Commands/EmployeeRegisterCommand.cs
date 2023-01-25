@@ -9,19 +9,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using GrifindoPS.Stores;
+using GrifindoPS.Services.DataServices;
 
 namespace GrifindoPS.Commands
 {
     internal class EmployeeRegisterCommand : CommandBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly Config _config;
+        private readonly IDataService<Employee>? _employeeDataService;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeRegisterCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
         {
             _employeeDetailsViewModel = employeeDetailsViewModel;
-            _config = Config.Instance;
+            _employeeDataService = ConfigStore.Instance.EmployeeDataService;
             _empListNavigationService = empListNavigationService;
 
             employeeDetailsViewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -29,30 +31,34 @@ namespace GrifindoPS.Commands
 
         public override bool CanExecute(object? parameter)
         {
-            return !string.IsNullOrEmpty(_employeeDetailsViewModel.Id) && base.CanExecute(parameter);
+            return !string.IsNullOrEmpty(_employeeDetailsViewModel.Name) && base.CanExecute(parameter);
         }
 
         public override void Execute(object? parameter)
         {
             Employee employee = new(
-                _employeeDetailsViewModel.Id,
                 _employeeDetailsViewModel.Name,
                 _employeeDetailsViewModel.Role,
-                new(_employeeDetailsViewModel.MonthlySalary, _employeeDetailsViewModel.OtRate, _employeeDetailsViewModel.Allowance),
                 _employeeDetailsViewModel.BOD.Date,
                 _employeeDetailsViewModel.Gender,
                 _employeeDetailsViewModel.Address,
                 _employeeDetailsViewModel.Phone,
-                _employeeDetailsViewModel.Email
+                _employeeDetailsViewModel.Email,
+                _employeeDetailsViewModel.MonthlySalary,
+                _employeeDetailsViewModel.OtRate,
+                _employeeDetailsViewModel.Allowance
                 );
-            
+
             try
             {
-                _config.AddEmployee(employee);
-                _config.CurrentEmployee = employee;
+                if (_employeeDataService != null)
+                {
+                    _employeeDataService.Add(employee);
+                    ConfigStore.Instance.CurrentEmployee = employee;
 
-                MessageBox.Show("The Employee is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                _empListNavigationService.Navigate();
+                    MessageBox.Show("The Employee is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _empListNavigationService.Navigate();
+                }
             }
             catch (RecordAlreadyExistingException)
             {
@@ -62,7 +68,7 @@ namespace GrifindoPS.Commands
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(_employeeDetailsViewModel.Id))
+            if(e.PropertyName == nameof(_employeeDetailsViewModel.Name))
             {
                 RaiseCanExecuteChanged();
             }

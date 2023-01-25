@@ -16,7 +16,7 @@ namespace GrifindoPS.ViewModels
             _employee = employee;
         }
 
-        public string Id => _employee.Id;
+        public Guid Id => _employee.Id;
         public string Name => _employee.Name;
         public string Role => _employee.Role;
         public string Gender => _employee.Gender.ToString();

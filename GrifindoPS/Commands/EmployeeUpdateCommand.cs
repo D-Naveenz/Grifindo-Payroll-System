@@ -1,4 +1,7 @@
 ﻿using GrifindoPS.Models;
+using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
+using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,17 +15,23 @@ namespace GrifindoPS.Commands
     internal class EmployeeUpdateCommand : CommandBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly Employee _employee;
+        private readonly IDataService<Employee>? _employeeDataContext;
+        private readonly NavigationService _empListNavigationService;
 
-        public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel)
+        public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
         {
             _employeeDetailsViewModel = employeeDetailsViewModel;
-            _employee = new();
+            _empListNavigationService = empListNavigationService;
+            _employeeDataContext = ConfigStore.Instance.EmployeeDataService;
         }
 
         public override void Execute(object? parameter)
         {
-            _employee.Id = _employeeDetailsViewModel.Id;
+            if (_employeeDataContext == null)
+                return;
+            
+            Employee _employee = _employeeDataContext.Get(_employeeDetailsViewModel.Id).Result;
+
             _employee.Name = _employeeDetailsViewModel.Name;
             _employee.Role = _employeeDetailsViewModel.Role;
             _employee.BOD = _employeeDetailsViewModel.BOD;
@@ -30,8 +39,13 @@ namespace GrifindoPS.Commands
             _employee.Address = _employeeDetailsViewModel.Address;
             _employee.PhoneNo = _employeeDetailsViewModel.Phone;
             _employee.Email = _employeeDetailsViewModel.Email;
+            _employee.MonthlySalary = _employeeDetailsViewModel.MonthlySalary;
+            _employee.OtRate = _employeeDetailsViewModel.OtRate;
+            _employee.Allowance = _employeeDetailsViewModel.Allowance;
 
-            MessageBox.Show(_employee.ToString());
+            _employeeDataContext.Update(_employee);
+
+            MessageBox.Show("Employee details successfully updated.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

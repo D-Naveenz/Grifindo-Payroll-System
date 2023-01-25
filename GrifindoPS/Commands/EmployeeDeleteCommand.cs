@@ -1,4 +1,7 @@
-﻿using GrifindoPS.Services;
+﻿using GrifindoPS.Models;
+using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
+using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,14 +15,15 @@ namespace GrifindoPS.Commands
     internal class EmployeeDeleteCommand : CommandBase
     {
         private readonly EmployeeListViewModel _employeeListViewModel;
-        private readonly Config _config;
+        private readonly ConfigStore _config = ConfigStore.Instance;
         private readonly NavigationService _viewModelRefreshService;
+        private readonly IDataService<Employee>? _employeeDataService;
 
         public EmployeeDeleteCommand(EmployeeListViewModel employeeListViewModel, NavigationService viewModelRefreshService)
         {
             _employeeListViewModel = employeeListViewModel;
-            _config = Config.Instance;
             _viewModelRefreshService = viewModelRefreshService;
+            _employeeDataService = _config.EmployeeDataService;
 
             employeeListViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -31,10 +35,15 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            if (_employeeListViewModel.SelectedEmployeeViewModel != null)
+            
+            if (_employeeListViewModel != null && _employeeListViewModel.SelectedEmployeeViewModel != null)
             {
-                _config.RemoveEmployee(_config.Employees.Where(e => e.Id == _employeeListViewModel.SelectedEmployeeViewModel.Id).First());
-                _viewModelRefreshService.Navigate();
+                Employee? selected = _employeeDataService.Get(_employeeListViewModel.SelectedEmployeeViewModel.Id).Result;
+                if (selected != null)
+                {
+                    _employeeDataService.Delete(selected);
+                    _viewModelRefreshService.Navigate();
+                }
             }
         }
 

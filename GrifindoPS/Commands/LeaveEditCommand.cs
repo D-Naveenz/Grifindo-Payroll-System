@@ -1,4 +1,7 @@
-﻿using GrifindoPS.Services;
+﻿using GrifindoPS.Models;
+using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
+using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,13 +14,12 @@ namespace GrifindoPS.Commands
 {
     internal class LeaveEditCommand : CommandBase
     {
-        private readonly Config _config;
+        private readonly ConfigStore _config = ConfigStore.Instance;
         private readonly LeavesListViewModel _leavesListViewModel;
         private readonly NavigationService _leavesDetailsNavigationService;
 
         public LeaveEditCommand(LeavesListViewModel leavesListViewModell, NavigationService leavesDetailsNavigationService)
         {
-            _config = Config.Instance;
             _leavesListViewModel = leavesListViewModell;
             _leavesDetailsNavigationService = leavesDetailsNavigationService;
 

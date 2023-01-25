@@ -1,7 +1,8 @@
-﻿using GrifindoPS.Models;
+﻿using GrifindoPS.DBContexts;
 using GrifindoPS.Services;
 using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -18,15 +19,24 @@ namespace GrifindoPS
     public partial class App : Application
     {
         private readonly NavigationStore _navigationStore;
+        private readonly GrifindoDBContextFactory _dbContextFactory;
+        // private const string CONNECTIONSTR = "Data Source=(local);Initial Catalog=Grifindo;Integrated Security=true;TrustServerCertificate=True;";
+        private const string CONNECTIONSTR = "Data Source=NAVEENZ-ROG;Initial Catalog=Grifindo;Integrated Security=True";
 
         public App()
         {
             _navigationStore = new();
+            _dbContextFactory = new(CONNECTIONSTR);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             _navigationStore.CurrentViewModel = CreateEmpListViewModel();
+
+            using (GrifindoContext dBContext = _dbContextFactory.CreateDbContext())
+            {
+                dBContext.Database.Migrate();
+            }
 
             var window = new MainWindow
             {
@@ -44,7 +54,11 @@ namespace GrifindoPS
         
         private EmployeeListViewModel CreateEmpListViewModel()
         {
-            return new EmployeeListViewModel(new NavigationService(_navigationStore, CreateEmpDetailsViewModel), new NavigationService(_navigationStore, CreateEmpListViewModel));
+            return new EmployeeListViewModel(
+                new NavigationService(_navigationStore, CreateEmpDetailsViewModel), 
+                new NavigationService(_navigationStore, CreateEmpListViewModel),
+                _dbContextFactory
+                );
         }
 
         private LeavesListViewModel CreateLeavesListViewModel()
@@ -52,7 +66,8 @@ namespace GrifindoPS
             return new LeavesListViewModel(
                 new NavigationService(_navigationStore, CreateEmpDetailsViewModel), 
                 new NavigationService(_navigationStore, CreateLeavesDetailsViewModel),
-                new NavigationService(_navigationStore, CreateLeavesListViewModel)
+                new NavigationService(_navigationStore, CreateLeavesListViewModel),
+                _dbContextFactory
                 );
         }
 

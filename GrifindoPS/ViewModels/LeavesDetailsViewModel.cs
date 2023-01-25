@@ -1,6 +1,7 @@
 ﻿using GrifindoPS.Commands;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,7 +30,7 @@ namespace GrifindoPS.ViewModels
                 "Rejected"
             };
 
-            _leave = Config.Instance.CurrentLeave;
+            _leave = ConfigStore.Instance.CurrentLeave;
             if (_leave == null)
             {
                 // Setup to the registration

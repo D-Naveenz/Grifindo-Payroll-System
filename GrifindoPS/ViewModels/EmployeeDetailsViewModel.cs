@@ -1,6 +1,7 @@
 ﻿using GrifindoPS.Commands;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,9 +16,8 @@ namespace GrifindoPS.ViewModels
     internal class EmployeeDetailsViewModel : ViewModelBase
     {
         private Employee? _employee;
-        private Salary _salary;
         private ObservableCollection<string> _roles;
-        private string _id = string.Empty;
+        private Guid _id;
         private string _name = string.Empty;
         private string _role = string.Empty;
         private DateTime _bod = new(2000, 1, 1);
@@ -32,21 +32,18 @@ namespace GrifindoPS.ViewModels
 
         public EmployeeDetailsViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
         {
-            _employee = Config.Instance.CurrentEmployee;
+            _employee = ConfigStore.Instance.CurrentEmployee;
             
             if (_employee == null)
             {
                 // Setup to the registration
                 SubmitName = "Register";
-                _employee = new();
-                _salary = new();
                 SubmitCommand = new EmployeeRegisterCommand(this, empListNavigationService);
             }
             else
             {
                 // Setup to the update
                 SubmitName = "Update";
-                _salary = _employee.Salary;
 
                 _id = _employee.Id;
                 _name = _employee.Name;
@@ -57,11 +54,11 @@ namespace GrifindoPS.ViewModels
                 _phone = _employee.PhoneNo;
                 _email = _employee.Email;
 
-                _monthlySalary = _salary.MonthlySalary;
-                _otRate = _salary.OtRate;
-                _allowance = _salary.Allowance;
+                _monthlySalary = _employee.MonthlySalary;
+                _otRate = _employee.OtRate;
+                _allowance = _employee.Allowance;
 
-                SubmitCommand = new EmployeeUpdateCommand(this);
+                SubmitCommand = new EmployeeUpdateCommand(this, empListNavigationService);
             }
 
             _roles = new()
@@ -74,16 +71,9 @@ namespace GrifindoPS.ViewModels
             CancelCommand = new NavigationCommand(empListNavigationService);
         }
 
-        public string Id
+        public Guid Id
         {
             get { return _id; }
-            set {
-                if (_id != value)
-                {
-                    _id = value;
-                    OnPropertyChanged();
-                }
-            }
         }
 
         public string Name
@@ -231,8 +221,6 @@ namespace GrifindoPS.ViewModels
         public string SubmitName { get; }
 
         public Employee? Employee => _employee;
-
-        public Salary Salary => _salary;
 
         public IEnumerable<string> Roles => _roles;
     }

@@ -69,7 +69,7 @@
 
         <!-- Employee Bio Data -->
         <Label Grid.Column="0" Content="Employee ID"/>
-        <TextBox x:Name="txtID" Grid.Column="1" TextWrapping="NoWrap" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox x:Name="txtID" Grid.Column="1" TextWrapping="NoWrap" Text="{Binding Id}" IsEnabled="False"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Name"/>
         <TextBox x:Name="txtName" Grid.Column="1" Grid.Row="1" TextWrapping="NoWrap" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
