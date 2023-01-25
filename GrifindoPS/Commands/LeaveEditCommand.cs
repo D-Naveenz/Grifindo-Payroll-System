@@ -31,7 +31,11 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            throw new NotImplementedException();
+            if (_leavesListViewModel.SelectedLeave != null)
+            {
+                _config.CurrentLeave = _leavesListViewModel.SelectedLeave;
+                _leavesDetailsNavigationService.Navigate();
+            }
         }
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

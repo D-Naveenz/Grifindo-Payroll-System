@@ -53,6 +53,9 @@ namespace GrifindoPS.Models
         public string? Email { get; set; }
         public Salary Salary => _salary;
 
+        public int NoOfLeaves => _leaves.Count;
+        
+
         public IEnumerable<Leave> GellAllLeaves()
         {
             return _leaves.Where(l => l.EmpID == Id);

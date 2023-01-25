@@ -20,7 +20,7 @@
             <Button Content="Button" Margin="12,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Leaves}">
+        <ListView Grid.Row="1" ItemsSource="{Binding Leaves}" SelectedItem="{Binding SelectedLeave}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -32,7 +32,7 @@
                     <GridViewColumn Header="Date">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Date}"/>
+                                <TextBlock Text="{Binding Date.Date}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

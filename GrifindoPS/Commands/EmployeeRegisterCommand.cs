@@ -39,7 +39,7 @@ namespace GrifindoPS.Commands
                 _employeeDetailsViewModel.Name,
                 _employeeDetailsViewModel.Role,
                 new(_employeeDetailsViewModel.MonthlySalary, _employeeDetailsViewModel.OtRate, _employeeDetailsViewModel.Allowance),
-                _employeeDetailsViewModel.BOD,
+                _employeeDetailsViewModel.BOD.Date,
                 _employeeDetailsViewModel.Gender,
                 _employeeDetailsViewModel.Address,
                 _employeeDetailsViewModel.Phone,

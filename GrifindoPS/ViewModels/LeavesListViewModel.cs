@@ -15,7 +15,7 @@ namespace GrifindoPS.ViewModels
 
         private Leave? _selectedLeave;
 
-        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService)
+        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService)
         {
             _employee = Config.Instance.CurrentEmployee;
             
@@ -29,8 +29,8 @@ namespace GrifindoPS.ViewModels
             }
 
             AddCommand = new NavigationCommand(leavesDetailsNavigationService);
-            EditCommand = new LeaveAddCommand();
-            DeleteCommand = new LeaveAddCommand();
+            EditCommand = new LeaveEditCommand(this, leavesDetailsNavigationService);
+            DeleteCommand = new LeaveDeleteCommand(this, viewModelRefreshService);
             BackCommand = new NavigationCommand(empDetailsNavigationService);
         }
 
