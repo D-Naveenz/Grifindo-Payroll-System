@@ -1,5 +1,5 @@
 ﻿using GrifindoPS.Commands;
-using GrifindoPS.Data.Models;
+using GrifindoPS.Models;
 using GrifindoPS.Services;
 using System;
 using System.Collections.Generic;
@@ -39,11 +39,6 @@ namespace GrifindoPS.ViewModels
             {
                 _employees.Add(new EmployeeViewModel(employee));
             }
-        }
-
-        internal void RefreshList()
-        {
-            OnPropertyChanged(nameof(Employees));
         }
 
         public IEnumerable<EmployeeViewModel> Employees => _employees;

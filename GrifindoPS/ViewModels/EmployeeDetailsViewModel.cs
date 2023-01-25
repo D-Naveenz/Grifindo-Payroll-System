@@ -1,5 +1,5 @@
 ﻿using GrifindoPS.Commands;
-using GrifindoPS.Data.Models;
+using GrifindoPS.Models;
 using GrifindoPS.Services;
 using System;
 using System.Collections.Generic;
@@ -72,22 +72,6 @@ namespace GrifindoPS.ViewModels
             };
             LeavesCommand = new EmployeeLeavesCommand(this, leavesNavigationService);
             CancelCommand = new NavigationCommand(empListNavigationService);
-        }
-
-        public void Reset()
-        {
-            _id = string.Empty;
-            _name = string.Empty;
-            _role = string.Empty;
-            _bod = new(2000, 1, 1);
-            //_gender = Gender.Male;
-            _address = string.Empty;
-            _phone = string.Empty;
-            _email = string.Empty;
-
-            _monthlySalary = 0;
-            _otRate = 0;
-            _allowance = 0;
         }
 
         public string Id

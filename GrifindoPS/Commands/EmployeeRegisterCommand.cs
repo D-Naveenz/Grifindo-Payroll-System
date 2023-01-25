@@ -1,4 +1,4 @@
-﻿using GrifindoPS.Data.Models;
+﻿using GrifindoPS.Models;
 using GrifindoPS.Exceptions;
 using GrifindoPS.Services;
 using GrifindoPS.ViewModels;
@@ -34,11 +34,6 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            Salary salary = new(
-                _employeeDetailsViewModel.MonthlySalary,
-                _employeeDetailsViewModel.OtRate,
-                _employeeDetailsViewModel.Allowance
-                );
             Employee employee = new(
                 _employeeDetailsViewModel.Id,
                 _employeeDetailsViewModel.Name,

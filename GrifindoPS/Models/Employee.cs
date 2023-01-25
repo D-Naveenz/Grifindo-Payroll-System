@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrifindoPS.Data.Models
+namespace GrifindoPS.Models
 {
     public enum Gender
     {

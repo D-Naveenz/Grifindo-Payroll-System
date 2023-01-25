@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GrifindoPS.Data.Models;
+using GrifindoPS.Models;
 using GrifindoPS.Exceptions;
 
 namespace GrifindoPS
@@ -28,6 +28,7 @@ namespace GrifindoPS
         public static Config Instance => _instance;
 
         public Employee? CurrentEmployee { get; set; }
+        public Leave? CurrentLeave { get; set; }
 
         public void AddEmployee(Employee employee)
         {

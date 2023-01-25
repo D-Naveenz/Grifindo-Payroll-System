@@ -1,4 +1,4 @@
-﻿using GrifindoPS.Data.Models;
+﻿using GrifindoPS.Models;
 using GrifindoPS.Services;
 using GrifindoPS.ViewModels;
 using System;

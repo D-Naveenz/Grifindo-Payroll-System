@@ -1,4 +1,4 @@
-﻿using GrifindoPS.Data.Models;
+﻿using GrifindoPS.Models;
 using GrifindoPS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace GrifindoPS.Commands
         {
             _employee.Id = _employeeDetailsViewModel.Id;
             _employee.Name = _employeeDetailsViewModel.Name;
-            //_employee.Role = _employeeDetailsViewModel.Role;
+            _employee.Role = _employeeDetailsViewModel.Role;
             _employee.BOD = _employeeDetailsViewModel.BOD;
             _employee.Gender = _employeeDetailsViewModel.Gender;
             _employee.Address = _employeeDetailsViewModel.Address;

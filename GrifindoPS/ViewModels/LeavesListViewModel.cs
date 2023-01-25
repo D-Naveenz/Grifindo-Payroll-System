@@ -1,5 +1,5 @@
 ﻿using GrifindoPS.Commands;
-using GrifindoPS.Data.Models;
+using GrifindoPS.Models;
 using GrifindoPS.Services;
 using System;
 using System.Collections.Generic;
@@ -13,18 +13,22 @@ namespace GrifindoPS.ViewModels
         private readonly ObservableCollection<Leave> _leaves;
         private readonly Employee? _employee;
 
-        public LeavesListViewModel(NavigationService empDetailsNavigationService)
+        private Leave? _selectedLeave;
+
+        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService)
         {
             _employee = Config.Instance.CurrentEmployee;
-            _leaves = new ObservableCollection<Leave>();
-            // For Debugging
+            
             if (_employee != null)
             {
-                _leaves.Add(new Leave(_employee, DateTime.Now, "Sick", true));
-                _leaves.Add(new Leave(_employee, DateTime.Now, "Party", false));
+                _leaves = new ObservableCollection<Leave>(_employee.GellAllLeaves());
+            }
+            else
+            {
+                _leaves = new ObservableCollection<Leave>();
             }
 
-            AddCommand = new LeaveAddCommand();
+            AddCommand = new NavigationCommand(leavesDetailsNavigationService);
             EditCommand = new LeaveAddCommand();
             DeleteCommand = new LeaveAddCommand();
             BackCommand = new NavigationCommand(empDetailsNavigationService);
@@ -39,5 +43,15 @@ namespace GrifindoPS.ViewModels
         public ICommand DeleteCommand { get; }
         
         public ICommand BackCommand { get; }
+
+        public Leave? SelectedLeave
+        {
+            get { return _selectedLeave; }
+            set
+            {
+                _selectedLeave = value;
+                OnPropertyChanged(nameof(SelectedLeave));
+            }
+        }
     }
 }

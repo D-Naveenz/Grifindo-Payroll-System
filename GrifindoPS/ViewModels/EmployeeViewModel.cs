@@ -1,4 +1,4 @@
-﻿using GrifindoPS.Data.Models;
+﻿using GrifindoPS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
