@@ -3,10 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GrifindoPS"
+        xmlns:local="clr-namespace:GrifindoPS" xmlns:views="clr-namespace:GrifindoPS.Views" xmlns:viewmodels="clr-namespace:GrifindoPS.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        FontSize="14">
     <Grid>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewmodels:EmployeeListViewModel}">
+                <views:EmployeeListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:EmployeeDetailsViewModel}">
+                <views:EmployeeDetailsView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LeavesListViewModel}">
+                <views:LeavesListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LeavesDetailsViewModel}">
+                <views:LeavesDetailsView />
+            </DataTemplate>
+        </Grid.Resources>
 
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>
