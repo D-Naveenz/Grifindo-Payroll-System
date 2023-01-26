@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace GrifindoPS.Models;
+namespace GrifindoPS.DTOs;
 
 public partial class Employee
 {
@@ -30,24 +30,17 @@ public partial class Employee
     [Unicode(false)]
     public string Gender { get; set; }
 
-    public string Address { get; set; }
-
-    [StringLength(12)]
-    [Unicode(false)]
-    public string PhoneNo { get; set; }
-
-    [StringLength(32)]
+    [StringLength(50)]
     [Unicode(false)]
     public string Email { get; set; }
 
-    [Required]
-    [StringLength(10)]
-    [Unicode(false)]
-    public string MonthlySalary { get; set; }
+    public double MonthlySalary { get; set; }
 
-    public double OtRate { get; set; }
+    public double? Allowance { get; set; }
 
-    public double Allowance { get; set; }
+    public double? OtRate { get; set; }
+
+    public double? OtHours { get; set; }
 
     [InverseProperty("Emp")]
     public virtual ICollection<Leave> Leave { get; } = new List<Leave>();

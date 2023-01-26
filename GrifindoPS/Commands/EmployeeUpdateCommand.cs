@@ -12,40 +12,44 @@ using System.Windows;
 
 namespace GrifindoPS.Commands
 {
-    internal class EmployeeUpdateCommand : CommandBase
+    internal class EmployeeUpdateCommand : AsyncCommndBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<Employee>? _employeeDataContext;
+        private readonly IDataService<EmployeeModel> _employeeDataService = ConfigStore.Instance.EmployeeDataService;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
         {
             _employeeDetailsViewModel = employeeDetailsViewModel;
             _empListNavigationService = empListNavigationService;
-            _employeeDataContext = ConfigStore.Instance.EmployeeDataService;
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
-            if (_employeeDataContext == null)
-                return;
-            
-            Employee _employee = _employeeDataContext.Get(_employeeDetailsViewModel.Id).Result;
+            EmployeeModel employee = new(
+                _employeeDetailsViewModel.Id,
+                _employeeDetailsViewModel.Name,
+                _employeeDetailsViewModel.Role,
+                _employeeDetailsViewModel.Birthday,
+                _employeeDetailsViewModel.Gender,
+                _employeeDetailsViewModel.Email,
+                _employeeDetailsViewModel.MonthlySalary,
+                _employeeDetailsViewModel.Allowance,
+                _employeeDetailsViewModel.OtRate,
+                _employeeDetailsViewModel.OtHours
+                );
 
-            _employee.Name = _employeeDetailsViewModel.Name;
-            _employee.Role = _employeeDetailsViewModel.Role;
-            _employee.BOD = _employeeDetailsViewModel.BOD;
-            _employee.Gender = _employeeDetailsViewModel.Gender;
-            _employee.Address = _employeeDetailsViewModel.Address;
-            _employee.PhoneNo = _employeeDetailsViewModel.Phone;
-            _employee.Email = _employeeDetailsViewModel.Email;
-            _employee.MonthlySalary = _employeeDetailsViewModel.MonthlySalary;
-            _employee.OtRate = _employeeDetailsViewModel.OtRate;
-            _employee.Allowance = _employeeDetailsViewModel.Allowance;
+            try
+            {
+                await _employeeDataService.Update(employee);
 
-            _employeeDataContext.Update(_employee);
-
-            MessageBox.Show("Employee details successfully updated.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Employee details successfully updated.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                _empListNavigationService.Navigate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Update Employee operation failed!\n" + ex, "GrifindoPS: Error - Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

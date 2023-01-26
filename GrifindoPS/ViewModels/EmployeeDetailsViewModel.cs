@@ -15,29 +15,42 @@ namespace GrifindoPS.ViewModels
 {
     internal class EmployeeDetailsViewModel : ViewModelBase
     {
-        private Employee? _employee;
+        private EmployeeModel? _employee;
         private ObservableCollection<string> _roles;
+
         private Guid _id;
         private string _name = string.Empty;
         private string _role = string.Empty;
         private DateTime _bod = new(2000, 1, 1);
         private string _gender = "Male";
-        private string? _address;
-        private string? _phone;
-        private string? _email;
+        private string _email;
 
-        private float _monthlySalary;
-        private float _otRate;
-        private float _allowance;
+        private double _monthlySalary;
+        private double _allowance;
+        private double _otRate;
+        private double _otHours;
+
+        private int _absent;
+        private double _noPay;
+        private double _basePay;
+        private double _grossPay;
 
         public EmployeeDetailsViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
         {
             _employee = ConfigStore.Instance.CurrentEmployee;
-            
+
             if (_employee == null)
             {
                 // Setup to the registration
                 SubmitName = "Register";
+
+                _email = string.Empty;
+                
+                _absent = 0;
+                _noPay = 0;
+                _basePay = 0;
+                _grossPay = 0;
+
                 SubmitCommand = new EmployeeRegisterCommand(this, empListNavigationService);
             }
             else
@@ -48,15 +61,14 @@ namespace GrifindoPS.ViewModels
                 _id = _employee.Id;
                 _name = _employee.Name;
                 _role = _employee.Role;
-                _bod = _employee.BOD;
+                _bod = _employee.Birthday;
                 _gender = _employee.Gender;
-                _address = _employee.Address;
-                _phone = _employee.PhoneNo;
                 _email = _employee.Email;
 
                 _monthlySalary = _employee.MonthlySalary;
-                _otRate = _employee.OtRate;
                 _allowance = _employee.Allowance;
+                _otRate = _employee.OtRate;
+                _otHours = _employee.OtHours;
 
                 SubmitCommand = new EmployeeUpdateCommand(this, empListNavigationService);
             }
@@ -67,13 +79,30 @@ namespace GrifindoPS.ViewModels
                 "Manager",
                 "Staff"
             };
+
+            LoadAbcentsCommand = new LoadNoOfAbcents(this);
             LeavesCommand = new EmployeeLeavesCommand(this, leavesNavigationService);
             CancelCommand = new NavigationCommand(empListNavigationService);
+        }
+
+        public static EmployeeDetailsViewModel LoadViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
+        {
+            EmployeeDetailsViewModel viewModel = new(empListNavigationService, leavesNavigationService);
+            if (ConfigStore.Instance.CurrentEmployee != null) viewModel.LoadAbcentsCommand.Execute(null);
+            return viewModel;
         }
 
         public Guid Id
         {
             get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public string Name
@@ -102,7 +131,7 @@ namespace GrifindoPS.ViewModels
             }
         }
         
-        public DateTime BOD
+        public DateTime Birthday
         {
             get { return _bod; }
             set
@@ -128,33 +157,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public string? Address
-        {
-            get { return _address; }
-            set
-            {
-                if (_address != value)
-                {
-                    _address = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public string? Phone
-        {
-            get { return _phone; }
-            set
-            {
-                if (_phone != value)
-                {
-                    _phone = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public string? Email
+        public string Email
         {
             get { return _email; }
             set
@@ -167,7 +170,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public float MonthlySalary
+        public double MonthlySalary
         {
             get { return _monthlySalary; }
             set
@@ -180,20 +183,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public float OtRate
-        {
-            get { return _otRate; }
-            set
-            {
-                if (_otRate != value)
-                {
-                    _otRate = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public float Allowance
+        public double Allowance
         {
             get { return _allowance; }
             set
@@ -206,11 +196,85 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public int Absent { get; }
+        public double OtRate
+        {
+            get { return _otRate; }
+            set
+            {
+                if (_otRate != value)
+                {
+                    _otRate = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-        public float BasePay { get; }
+        public double OtHours
+        {
+            get { return _otHours; }
+            set
+            {
+                if (_otHours != value)
+                {
+                    _otHours = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-        public float GrossPay { get; }
+        public int Absent
+        {
+            get { return _absent; }
+            set
+            {
+                if (_absent != value)
+                {
+                    _absent = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double NoPay
+        {
+            get { return _noPay; }
+            set
+            {
+                if (_noPay != value)
+                {
+                    _noPay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double BasePay
+        {
+            get { return _basePay; }
+            set
+            {
+                if (_basePay != value)
+                {
+                    _basePay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double GrossPay
+        {
+            get { return _grossPay; }
+            set
+            {
+                if (_grossPay != value)
+                {
+                    _grossPay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public LoadNoOfAbcents LoadAbcentsCommand { get; }
 
         public ICommand LeavesCommand { get; }
 
@@ -219,8 +283,6 @@ namespace GrifindoPS.ViewModels
         public ICommand CancelCommand { get; }
 
         public string SubmitName { get; }
-
-        public Employee? Employee => _employee;
 
         public IEnumerable<string> Roles => _roles;
     }

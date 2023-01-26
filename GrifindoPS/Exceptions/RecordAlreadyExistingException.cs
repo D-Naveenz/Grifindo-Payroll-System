@@ -10,23 +10,23 @@ namespace GrifindoPS.Exceptions
 {
     internal class RecordAlreadyExistingException : Exception
     {
-        public Employee ExistingEmployee { get; }
-        public Employee NewEmployee { get; }
+        public EmployeeModel ExistingEmployee { get; }
+        public EmployeeModel NewEmployee { get; }
 
 
-        public RecordAlreadyExistingException(Employee existingEmployee, Employee newEmployee)
+        public RecordAlreadyExistingException(EmployeeModel existingEmployee, EmployeeModel newEmployee)
         {
             ExistingEmployee = existingEmployee;
             NewEmployee = newEmployee;
         }
 
-        public RecordAlreadyExistingException(string? message, Employee existingEmployee, Employee newEmployee) : base(message)
+        public RecordAlreadyExistingException(string? message, EmployeeModel existingEmployee, EmployeeModel newEmployee) : base(message)
         {
             ExistingEmployee = existingEmployee;
             NewEmployee = newEmployee;
         }
 
-        public RecordAlreadyExistingException(string? message, Exception? innerException, Employee existingEmployee, Employee newEmployee) : base(message, innerException)
+        public RecordAlreadyExistingException(string? message, Exception? innerException, EmployeeModel existingEmployee, EmployeeModel newEmployee) : base(message, innerException)
         {
             ExistingEmployee = existingEmployee;
             NewEmployee = newEmployee;

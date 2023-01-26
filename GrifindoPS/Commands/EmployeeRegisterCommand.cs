@@ -14,10 +14,10 @@ using GrifindoPS.Services.DataServices;
 
 namespace GrifindoPS.Commands
 {
-    internal class EmployeeRegisterCommand : CommandBase
+    internal class EmployeeRegisterCommand : AsyncCommndBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<Employee>? _employeeDataService;
+        private readonly IDataService<EmployeeModel> _employeeDataService;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeRegisterCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
@@ -31,34 +31,31 @@ namespace GrifindoPS.Commands
 
         public override bool CanExecute(object? parameter)
         {
-            return !string.IsNullOrEmpty(_employeeDetailsViewModel.Name) && base.CanExecute(parameter);
+            return !string.IsNullOrEmpty(_employeeDetailsViewModel.Name) && 
+                !string.IsNullOrEmpty(_employeeDetailsViewModel.Email) && base.CanExecute(parameter);
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
-            Employee employee = new(
+            EmployeeModel employee = new(
+                Guid.NewGuid(),
                 _employeeDetailsViewModel.Name,
                 _employeeDetailsViewModel.Role,
-                _employeeDetailsViewModel.BOD.Date,
+                _employeeDetailsViewModel.Birthday,
                 _employeeDetailsViewModel.Gender,
-                _employeeDetailsViewModel.Address,
-                _employeeDetailsViewModel.Phone,
                 _employeeDetailsViewModel.Email,
                 _employeeDetailsViewModel.MonthlySalary,
+                _employeeDetailsViewModel.Allowance,
                 _employeeDetailsViewModel.OtRate,
-                _employeeDetailsViewModel.Allowance
+                _employeeDetailsViewModel.OtHours
                 );
 
             try
             {
-                if (_employeeDataService != null)
-                {
-                    _employeeDataService.Add(employee);
-                    ConfigStore.Instance.CurrentEmployee = employee;
+                await _employeeDataService.Add(employee);
 
-                    MessageBox.Show("The Employee is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    _empListNavigationService.Navigate();
-                }
+                MessageBox.Show("The Employee is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                _empListNavigationService.Navigate();
             }
             catch (RecordAlreadyExistingException)
             {
@@ -68,7 +65,8 @@ namespace GrifindoPS.Commands
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(_employeeDetailsViewModel.Name))
+            if (e.PropertyName == nameof(_employeeDetailsViewModel.Name) ||
+                e.PropertyName == nameof(_employeeDetailsViewModel.Email))
             {
                 RaiseCanExecuteChanged();
             }

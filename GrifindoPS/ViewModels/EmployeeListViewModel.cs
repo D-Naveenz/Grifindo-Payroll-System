@@ -2,8 +2,8 @@
 using GrifindoPS.DBContexts;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
 using GrifindoPS.Stores;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,36 +17,41 @@ namespace GrifindoPS.ViewModels
 {
     internal class EmployeeListViewModel : ViewModelBase
     {
-        private readonly ObservableCollection<EmployeeViewModel> _employees;
-        private readonly ConfigStore _config = ConfigStore.Instance;
-        private readonly GrifindoDBContextFactory _grifindoDBContextFactory;
-        private EmployeeViewModel? _selectedEmployeeViewModel;
+        private readonly ObservableCollection<EmployeeModel> _employees;
+        private EmployeeModel? _selectedEmployee;
         
-        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService, GrifindoDBContextFactory grifindoDBContextFactory)
+        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
         {
 
-            _employees = new ObservableCollection<EmployeeViewModel>();
-            _grifindoDBContextFactory = grifindoDBContextFactory;
+            _employees = new ObservableCollection<EmployeeModel>();
 
-            _config.CurrentEmployee = null;
-            UpdateEmployees();
+            ConfigStore.Instance.CurrentEmployee = null;
 
+            LoadEmployeesCommand = new LoadEmployeesCommand(this);
             AddCommand = new NavigationCommand(empDetailsNavigationService);
             EditCommand = new EmployeeEditCommand(this, empDetailsNavigationService);
             DeleteCommand = new EmployeeDeleteCommand(this, viewModelRefreshService);
         }
 
-        private void UpdateEmployees()
+        public static EmployeeListViewModel LoadViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
+        {
+            EmployeeListViewModel viewModel = new EmployeeListViewModel(empDetailsNavigationService, viewModelRefreshService);
+            viewModel.LoadEmployeesCommand.Execute(null);
+            return viewModel;
+        }
+
+        public void UpdateEmployees(IEnumerable<EmployeeModel> employees)
         {
             _employees.Clear();
-            using GrifindoDBContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
-            foreach (Employee employee in _dbContext.Employees)
+            foreach (EmployeeModel employee in employees)
             {
-                _employees.Add(new EmployeeViewModel(employee));
+                _employees.Add(employee);
             }
         }
 
-        public IEnumerable<EmployeeViewModel> Employees => _employees;
+        public IEnumerable<EmployeeModel> Employees => _employees;
+
+        public ICommand LoadEmployeesCommand { get; }
 
         public ICommand AddCommand { get; }
 
@@ -54,13 +59,13 @@ namespace GrifindoPS.ViewModels
 
         public ICommand DeleteCommand { get; }
 
-        public EmployeeViewModel? SelectedEmployeeViewModel
+        public EmployeeModel? SelectedEmployee
         {
-            get { return _selectedEmployeeViewModel; }
+            get { return _selectedEmployee; }
             set
             {
-                _selectedEmployeeViewModel = value;
-                OnPropertyChanged(nameof(SelectedEmployeeViewModel));
+                _selectedEmployee = value;
+                OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
     }

@@ -2,6 +2,7 @@
 using GrifindoPS.DBContexts;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
 using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
@@ -12,45 +13,44 @@ namespace GrifindoPS.ViewModels
 {
     internal class LeavesListViewModel : ViewModelBase
     {
-        private readonly ObservableCollection<Leave> _leaves;
-        private readonly GrifindoDBContextFactory _grifindoDBContextFactory;
-        private readonly Employee? _employee = Config.Instance.CurrentEmployee;
+        private readonly ObservableCollection<LeaveModel> _leaves;
+        private readonly EmployeeModel? _employee = ConfigStore.Instance.CurrentEmployee;
+        private readonly EmployeeDataService _employeeDataService = ConfigStore.Instance.EmployeeDataService;
 
-        private Leave? _selectedLeave;
+        private LeaveModel? _selectedLeave;
 
-        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService,
-            GrifindoDBContextFactory grifindoDBContextFactory)
+        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService)
         {
-            _leaves = new ObservableCollection<Leave>();
-            if (_employee != null)
-            {
-                UpdateLeaves();
-            }
-            _grifindoDBContextFactory = grifindoDBContextFactory;
+            _leaves = new ObservableCollection<LeaveModel>();
 
+            ConfigStore.Instance.CurrentLeave = null;
+
+            LoadLeavesCommand = new LoadLeavesCommand(this);
             AddCommand = new NavigationCommand(leavesDetailsNavigationService);
             EditCommand = new LeaveEditCommand(this, leavesDetailsNavigationService);
             DeleteCommand = new LeaveDeleteCommand(this, viewModelRefreshService);
             BackCommand = new NavigationCommand(empDetailsNavigationService);
         }
 
-        private void UpdateLeaves()
+        public static LeavesListViewModel LoadViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService)
+        {
+            LeavesListViewModel viewModel = new LeavesListViewModel(empDetailsNavigationService, leavesDetailsNavigationService, viewModelRefreshService);
+            viewModel.LoadLeavesCommand.Execute(null);
+            return viewModel;
+        }
+
+        public void UpdateLeaves(IEnumerable<LeaveModel> leaves)
         {
             _leaves.Clear();
-            using GrifindoDBContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
-            if (_employee != null)
+            foreach (LeaveModel leave in leaves)
             {
-                foreach (Leave leave in _dbContext.Leaves)
-                {
-                    if (leave.EmployeeId == _employee.Id)
-                    {
-                        _leaves.Add(leave);
-                    }
-                }
+                _leaves.Add(leave);
             }
         }
 
-        public IEnumerable<Leave> Leaves => _leaves;
+        public IEnumerable<LeaveModel> Leaves => _leaves;
+
+        public LoadLeavesCommand LoadLeavesCommand { get; }
 
         public ICommand AddCommand { get; }
 
@@ -60,7 +60,7 @@ namespace GrifindoPS.ViewModels
         
         public ICommand BackCommand { get; }
 
-        public Leave? SelectedLeave
+        public LeaveModel? SelectedLeave
         {
             get { return _selectedLeave; }
             set

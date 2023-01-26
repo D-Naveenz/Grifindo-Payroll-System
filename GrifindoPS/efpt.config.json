@@ -7,7 +7,7 @@
    "IncludeConnectionString": true,
    "ModelNamespace": null,
    "OutputContextPath": "DBContexts",
-   "OutputPath": "Models",
+   "OutputPath": "DTOs",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "GrifindoPS",
    "Schemas": null,
@@ -23,7 +23,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "naveenz-rog.Grifindo.dbo",
+   "UiHint": "naveenz-rog.GrifindoPS.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,

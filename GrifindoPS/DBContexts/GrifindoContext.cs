@@ -2,7 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using GrifindoPS.Models;
+using GrifindoPS.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace GrifindoPS.DBContexts;
@@ -22,11 +22,9 @@ public partial class GrifindoContext : DbContext
 
     public virtual DbSet<Leave> Leave { get; set; }
 
-    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-    /*
-     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=NAVEENZ-ROG;Initial Catalog=Grifindo;Integrated Security=True");
-     */
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Data Source=NAVEENZ-ROG;Initial Catalog=GrifindoPS;Integrated Security=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,11 +35,9 @@ public partial class GrifindoContext : DbContext
 
         modelBuilder.Entity<Leave>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_EmpLeaves");
-
             entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.Emp).WithMany(p => p.Leave).HasConstraintName("FK_EmpLeaves_Employee1");
+            entity.HasOne(d => d.Emp).WithMany(p => p.Leave).HasConstraintName("FK_Leave_Employee");
         });
 
         OnModelCreatingPartial(modelBuilder);
