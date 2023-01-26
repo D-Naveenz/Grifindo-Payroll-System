@@ -29,7 +29,7 @@ namespace GrifindoPS.Services.DataServices
         public async Task<bool> Delete(LeaveModel item)
         {
             using GrifindoContext dBContext = _dbContextFactory.CreateDbContext();
-            dBContext.Leave.Remove(ToEntity(item);
+            dBContext.Leave.Remove(ToEntity(item));
             await dBContext.SaveChangesAsync();
             return true;
         }

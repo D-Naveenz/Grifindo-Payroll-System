@@ -2,8 +2,8 @@
 using GrifindoPS.DBContexts;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
 using GrifindoPS.Stores;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,35 +18,40 @@ namespace GrifindoPS.ViewModels
     internal class EmployeeListViewModel : ViewModelBase
     {
         private readonly ObservableCollection<EmployeeModel> _employees;
-        private readonly ConfigStore _config = ConfigStore.Instance;
-        private readonly GrifindoContextFactory _grifindoDBContextFactory;
         private EmployeeModel? _selectedEmployee;
         
-        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService, GrifindoContextFactory grifindoDBContextFactory)
+        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
         {
 
             _employees = new ObservableCollection<EmployeeModel>();
-            _grifindoDBContextFactory = grifindoDBContextFactory;
 
-            _config.CurrentEmployee = null;
-            UpdateEmployees();
+            ConfigStore.Instance.CurrentEmployee = null;
 
+            LoadEmployeesCommand = new LoadEmployeesCommand(this);
             AddCommand = new NavigationCommand(empDetailsNavigationService);
             EditCommand = new EmployeeEditCommand(this, empDetailsNavigationService);
             DeleteCommand = new EmployeeDeleteCommand(this, viewModelRefreshService);
         }
 
-        private void UpdateEmployees()
+        public static EmployeeListViewModel LoadViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
+        {
+            EmployeeListViewModel viewModel = new EmployeeListViewModel(empDetailsNavigationService, viewModelRefreshService);
+            viewModel.LoadEmployeesCommand.Execute(null);
+            return viewModel;
+        }
+
+        public void UpdateEmployees(IEnumerable<EmployeeModel> employees)
         {
             _employees.Clear();
-            using GrifindoContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
-            foreach (EmployeeModel employee in _dbContext.Employee)
+            foreach (EmployeeModel employee in employees)
             {
                 _employees.Add(employee);
             }
         }
 
         public IEnumerable<EmployeeModel> Employees => _employees;
+
+        public ICommand LoadEmployeesCommand { get; }
 
         public ICommand AddCommand { get; }
 

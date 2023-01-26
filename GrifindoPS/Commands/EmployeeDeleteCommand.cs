@@ -9,10 +9,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GrifindoPS.Commands
 {
-    internal class EmployeeDeleteCommand : CommandBase
+    internal class EmployeeDeleteCommand : AsyncCommndBase
     {
         private readonly EmployeeListViewModel _employeeListViewModel;
         private readonly ConfigStore _config = ConfigStore.Instance;
@@ -33,17 +34,22 @@ namespace GrifindoPS.Commands
             return (_employeeListViewModel.SelectedEmployee != null) && base.CanExecute(parameter);
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
-            
-            if (_employeeListViewModel != null && _employeeListViewModel.SelectedEmployee != null)
+            try
             {
-                EmployeeModel? selected = _employeeListViewModel.SelectedEmployee;
-                if (selected != null)
-                {
-                    _employeeDataService.Delete(selected);
-                    _viewModelRefreshService.Navigate();
-                }
+                if (_employeeListViewModel.SelectedEmployee == null) throw new Exception("Couldn't locate Employee data!");
+
+                EmployeeModel selected = _employeeListViewModel.SelectedEmployee;
+                await _employeeDataService.Delete(selected);
+                MessageBox.Show("The Employee is successfully deleted.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                _viewModelRefreshService.Navigate();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Delete Employee operation failed!\n" + ex, "GrifindoPS: Error - Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

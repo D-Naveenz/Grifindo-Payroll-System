@@ -36,26 +36,21 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            LeaveModel leave = new()
-            {
-                Id = Guid.NewGuid(),
-                Date = _leavesDetailsViewModel.Date,
-                Description = _leavesDetailsViewModel.Description,
-                Approval = _leavesDetailsViewModel.Approval,
-                EmpId = ConfigStore.Instance.CurrentEmployee.Id,
-                Emp = ConfigStore.Instance.CurrentEmployee
-            };
+            LeaveModel leave = new(
+                Guid.NewGuid(),
+                _leavesDetailsViewModel.Date,
+                _leavesDetailsViewModel.Description,
+                ConfigStore.Instance.CurrentEmployee,
+                _leavesDetailsViewModel.Approval
+                );
 
             try
             {
-                if (_leaveDataService != null)
-                {
-                    _leaveDataService.Add(leave);
-                    ConfigStore.Instance.CurrentLeave = leave;
+                _leaveDataService.Add(leave);
+                ConfigStore.Instance.CurrentLeave = leave;
 
-                    MessageBox.Show("The leave is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    _leavesListNavigationService.Navigate();
-                }
+                MessageBox.Show("The leave is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                _leavesListNavigationService.Navigate();
             }
             catch (RecordAlreadyExistingException)
             {

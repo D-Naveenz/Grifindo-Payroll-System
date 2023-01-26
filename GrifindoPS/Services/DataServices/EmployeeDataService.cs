@@ -56,6 +56,19 @@ namespace GrifindoPS.Services.DataServices
             await dBContext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<LeaveModel>> GetAllLeaves(EmployeeModel employee)
+        {
+            using GrifindoContext dBContext = _grifindoDBContextFactory.CreateDbContext();
+            var result = await dBContext.Employee.Include(e => e.Leave).FirstOrDefaultAsync(e => e.Id == employee.Id);
+            if (result == null)
+            {
+                MessageBox.Show("Employee not found");
+                return Enumerable.Empty<LeaveModel>();
+            }
+            
+            return result.Leave.Select(l => LeaveDataService.ToModel(l));
+        }
+
         public static Employee ToEntity(EmployeeModel item)
         {
             return new()

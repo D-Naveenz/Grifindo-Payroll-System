@@ -17,13 +17,11 @@ namespace GrifindoPS.Commands
         private readonly EmployeeListViewModel _employeeListViewModel;
         private readonly ConfigStore _config = ConfigStore.Instance;
         private readonly NavigationService _empDetailsNavigationService;
-        private readonly IDataService<EmployeeModel> _employeeDataService;
 
         public EmployeeEditCommand(EmployeeListViewModel employeeListViewModel, NavigationService empDetailsNavigationService)
         {
             _employeeListViewModel = employeeListViewModel;
             _empDetailsNavigationService = empDetailsNavigationService;
-            _employeeDataService = _config.EmployeeDataService;
 
             employeeListViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }

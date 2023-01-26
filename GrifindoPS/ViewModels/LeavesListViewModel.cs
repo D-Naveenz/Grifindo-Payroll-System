@@ -2,6 +2,7 @@
 using GrifindoPS.DBContexts;
 using GrifindoPS.Models;
 using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
 using GrifindoPS.Stores;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace GrifindoPS.ViewModels
     internal class LeavesListViewModel : ViewModelBase
     {
         private readonly ObservableCollection<LeaveModel> _leaves;
-        private readonly GrifindoContextFactory _grifindoDBContextFactory;
         private readonly EmployeeModel? _employee = ConfigStore.Instance.CurrentEmployee;
+        private readonly EmployeeDataService _employeeDataService = ConfigStore.Instance.EmployeeDataService;
 
         private LeaveModel? _selectedLeave;
 
@@ -22,7 +23,6 @@ namespace GrifindoPS.ViewModels
             GrifindoContextFactory grifindoDBContextFactory)
         {
             _leaves = new ObservableCollection<LeaveModel>();
-            _grifindoDBContextFactory = grifindoDBContextFactory;
             if (_employee != null)
             {
                 UpdateLeaves();
@@ -37,12 +37,11 @@ namespace GrifindoPS.ViewModels
         private void UpdateLeaves()
         {
             _leaves.Clear();
-            using GrifindoContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
             if (_employee != null)
             {
-                foreach (LeaveModel leave in _dbContext.Leave)
+                foreach (LeaveModel leave in _employeeDataService.GetAllLeaves(_employee).Result)
                 {
-                    if (leave.EmpId == _employee.Id)
+                    if (leave.Emp.Id == _employee.Id)
                     {
                         _leaves.Add(leave);
                     }
