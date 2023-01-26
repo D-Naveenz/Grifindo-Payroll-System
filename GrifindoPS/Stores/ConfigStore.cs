@@ -1,4 +1,5 @@
-﻿using GrifindoPS.Models;
+﻿using GrifindoPS.DBContexts;
+using GrifindoPS.Models;
 using GrifindoPS.Services.DataServices;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace GrifindoPS.Stores
 
         public static ConfigStore Instance => _instance;
 
-        public IDataService<Employee>? EmployeeDataService { get; set; }
-        public Employee CurrentEmployee { get; set; }
-        public IDataService<Leave>? LeaveDataService { get; set; }
-        public Leave CurrentLeave { get; set; }
+        public IDataService<EmployeeModel> EmployeeDataService { get; set; }
+        public EmployeeModel CurrentEmployee { get; set; }
+        public IDataService<LeaveModel> LeaveDataService { get; set; }
+        public LeaveModel CurrentLeave { get; set; }
     }
 }

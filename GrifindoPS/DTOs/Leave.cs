@@ -6,18 +6,17 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace GrifindoPS.Models;
+namespace GrifindoPS.DTOs;
 
 public partial class Leave
 {
     [Key]
-    [Column("ID")]
     public Guid Id { get; set; }
 
     [Column(TypeName = "date")]
     public DateTime Date { get; set; }
 
-    [Column(TypeName = "ntext")]
+    [StringLength(50)]
     public string Description { get; set; }
 
     [Required]

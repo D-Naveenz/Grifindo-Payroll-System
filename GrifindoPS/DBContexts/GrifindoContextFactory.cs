@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace GrifindoPS.DBContexts
 {
-    internal class GrifindoDBContextFactory
+    internal class GrifindoContextFactory
     {
         private readonly string _connectionstring;
 
-        public GrifindoDBContextFactory(string connectionstring)
+        public GrifindoContextFactory(string connectionstring)
         {
             _connectionstring = connectionstring;
         }

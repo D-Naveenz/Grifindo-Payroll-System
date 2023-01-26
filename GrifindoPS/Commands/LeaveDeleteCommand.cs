@@ -17,7 +17,7 @@ namespace GrifindoPS.Commands
         private readonly ConfigStore _config = ConfigStore.Instance;
         private readonly LeavesListViewModel _leavesListViewModel;
         private readonly NavigationService _viewModelRefreshService;
-        private readonly IDataService<Leave>? _leaveDataService;
+        private readonly IDataService<LeaveModel> _leaveDataService;
 
         public LeaveDeleteCommand(LeavesListViewModel leavesListViewModell, NavigationService viewModelRefreshService)
         {

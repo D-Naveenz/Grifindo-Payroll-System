@@ -15,7 +15,7 @@ namespace GrifindoPS.ViewModels
 {
     internal class LeavesDetailsViewModel : ViewModelBase
     {
-        private Leave? _leave;
+        private LeaveModel? _leave;
         private ObservableCollection<string> _approvals;
         private DateTime _date = new(2000, 1, 1);
         private string? _description;

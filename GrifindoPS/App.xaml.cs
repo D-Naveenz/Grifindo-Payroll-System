@@ -1,5 +1,6 @@
 ﻿using GrifindoPS.DBContexts;
 using GrifindoPS.Services;
+using GrifindoPS.Services.DataServices;
 using GrifindoPS.Stores;
 using GrifindoPS.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -19,24 +20,26 @@ namespace GrifindoPS
     public partial class App : Application
     {
         private readonly NavigationStore _navigationStore;
-        private readonly GrifindoDBContextFactory _dbContextFactory;
+        private readonly GrifindoContextFactory _dbContextFactory;
         // private const string CONNECTIONSTR = "Data Source=(local);Initial Catalog=Grifindo;Integrated Security=true;TrustServerCertificate=True;";
-        private const string CONNECTIONSTR = "Data Source=NAVEENZ-ROG;Initial Catalog=Grifindo;Integrated Security=True";
+        private const string CONNECTIONSTR = "Data Source=NAVEENZ-ROG;Initial Catalog=Grifindo;Integrated Security=True;TrustServerCertificate=True;";
 
         public App()
         {
             _navigationStore = new();
             _dbContextFactory = new(CONNECTIONSTR);
+            ConfigStore.Instance.EmployeeDataService = new EmployeeDataService(_dbContextFactory);
+            ConfigStore.Instance.LeaveDataService = new LeaveDataService(_dbContextFactory);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             _navigationStore.CurrentViewModel = CreateEmpListViewModel();
 
-            using (GrifindoContext dBContext = _dbContextFactory.CreateDbContext())
-            {
-                dBContext.Database.Migrate();
-            }
+            //using (GrifindoContext dBContext = _dbContextFactory.CreateDbContext())
+            //{
+            //    dBContext.Database.Migrate();
+            //}
 
             var window = new MainWindow
             {

@@ -15,7 +15,7 @@ namespace GrifindoPS.ViewModels
 {
     internal class EmployeeDetailsViewModel : ViewModelBase
     {
-        private Employee? _employee;
+        private EmployeeModel? _employee;
         private ObservableCollection<string> _roles;
         private Guid _id;
         private string _name = string.Empty;
@@ -26,14 +26,14 @@ namespace GrifindoPS.ViewModels
         private string? _phone;
         private string? _email;
 
-        private float _monthlySalary;
-        private float _otRate;
-        private float _allowance;
+        private double _monthlySalary;
+        private double _otRate;
+        private double _allowance;
 
         public EmployeeDetailsViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
         {
             _employee = ConfigStore.Instance.CurrentEmployee;
-            
+
             if (_employee == null)
             {
                 // Setup to the registration
@@ -48,7 +48,7 @@ namespace GrifindoPS.ViewModels
                 _id = _employee.Id;
                 _name = _employee.Name;
                 _role = _employee.Role;
-                _bod = _employee.BOD;
+                _bod = _employee.Birthday;
                 _gender = _employee.Gender;
                 _address = _employee.Address;
                 _phone = _employee.PhoneNo;
@@ -74,6 +74,14 @@ namespace GrifindoPS.ViewModels
         public Guid Id
         {
             get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public string Name
@@ -167,7 +175,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public float MonthlySalary
+        public double MonthlySalary
         {
             get { return _monthlySalary; }
             set
@@ -180,7 +188,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public float OtRate
+        public double OtRate
         {
             get { return _otRate; }
             set
@@ -193,7 +201,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public float Allowance
+        public double Allowance
         {
             get { return _allowance; }
             set
@@ -206,11 +214,51 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public int Absent { get; }
+        public int Absent
+        {
+            get
+            {
+                if (_employee == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return _employee.Leave.Count;
+                }
+            }
+        }
 
-        public float BasePay { get; }
+        public double BasePay
+        {
+            get
+            {
+                if (_employee == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return _employee.MonthlySalary + _employee.Allowance + (_employee.OtRate);
+                }
+            }
+        }
 
-        public float GrossPay { get; }
+        public double GrossPay
+        {
+            get
+            {
+                if (_employee == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    double noPay = _employee.MonthlySalary / Config.Instance.CycleRange().Days * Absent;
+                    return BasePay - (noPay + BasePay * Config.Instance.GvtTax);
+                }
+            }
+        }
 
         public ICommand LeavesCommand { get; }
 
@@ -220,8 +268,9 @@ namespace GrifindoPS.ViewModels
 
         public string SubmitName { get; }
 
-        public Employee? Employee => _employee;
+        public EmployeeModel? Employee => _employee;
 
         public IEnumerable<string> Roles => _roles;
+            
     }
 }

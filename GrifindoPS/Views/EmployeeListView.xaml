@@ -20,7 +20,7 @@
             <Button Content="Search" Margin="12,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployeeViewModel}">
+        <ListView Grid.Row="1" ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

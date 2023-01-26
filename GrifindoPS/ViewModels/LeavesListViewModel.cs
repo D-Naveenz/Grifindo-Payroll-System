@@ -12,21 +12,21 @@ namespace GrifindoPS.ViewModels
 {
     internal class LeavesListViewModel : ViewModelBase
     {
-        private readonly ObservableCollection<Leave> _leaves;
-        private readonly GrifindoDBContextFactory _grifindoDBContextFactory;
-        private readonly Employee? _employee = Config.Instance.CurrentEmployee;
+        private readonly ObservableCollection<LeaveModel> _leaves;
+        private readonly GrifindoContextFactory _grifindoDBContextFactory;
+        private readonly EmployeeModel? _employee = ConfigStore.Instance.CurrentEmployee;
 
-        private Leave? _selectedLeave;
+        private LeaveModel? _selectedLeave;
 
         public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService,
-            GrifindoDBContextFactory grifindoDBContextFactory)
+            GrifindoContextFactory grifindoDBContextFactory)
         {
-            _leaves = new ObservableCollection<Leave>();
+            _leaves = new ObservableCollection<LeaveModel>();
+            _grifindoDBContextFactory = grifindoDBContextFactory;
             if (_employee != null)
             {
                 UpdateLeaves();
             }
-            _grifindoDBContextFactory = grifindoDBContextFactory;
 
             AddCommand = new NavigationCommand(leavesDetailsNavigationService);
             EditCommand = new LeaveEditCommand(this, leavesDetailsNavigationService);
@@ -37,12 +37,12 @@ namespace GrifindoPS.ViewModels
         private void UpdateLeaves()
         {
             _leaves.Clear();
-            using GrifindoDBContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
+            using GrifindoContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
             if (_employee != null)
             {
-                foreach (Leave leave in _dbContext.Leaves)
+                foreach (LeaveModel leave in _dbContext.Leave)
                 {
-                    if (leave.EmployeeId == _employee.Id)
+                    if (leave.EmpId == _employee.Id)
                     {
                         _leaves.Add(leave);
                     }
@@ -50,7 +50,7 @@ namespace GrifindoPS.ViewModels
             }
         }
 
-        public IEnumerable<Leave> Leaves => _leaves;
+        public IEnumerable<LeaveModel> Leaves => _leaves;
 
         public ICommand AddCommand { get; }
 
@@ -60,7 +60,7 @@ namespace GrifindoPS.ViewModels
         
         public ICommand BackCommand { get; }
 
-        public Leave? SelectedLeave
+        public LeaveModel? SelectedLeave
         {
             get { return _selectedLeave; }
             set

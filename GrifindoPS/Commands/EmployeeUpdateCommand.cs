@@ -15,7 +15,7 @@ namespace GrifindoPS.Commands
     internal class EmployeeUpdateCommand : CommandBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<Employee>? _employeeDataContext;
+        private readonly IDataService<EmployeeModel>? _employeeDataContext;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
@@ -29,12 +29,15 @@ namespace GrifindoPS.Commands
         {
             if (_employeeDataContext == null)
                 return;
-            
-            Employee _employee = _employeeDataContext.Get(_employeeDetailsViewModel.Id).Result;
+
+            EmployeeModel? _employee = ConfigStore.Instance.CurrentEmployee;
+
+            if (_employee == null)
+                return;
 
             _employee.Name = _employeeDetailsViewModel.Name;
             _employee.Role = _employeeDetailsViewModel.Role;
-            _employee.BOD = _employeeDetailsViewModel.BOD;
+            _employee.Birthday = _employeeDetailsViewModel.BOD;
             _employee.Gender = _employeeDetailsViewModel.Gender;
             _employee.Address = _employeeDetailsViewModel.Address;
             _employee.PhoneNo = _employeeDetailsViewModel.Phone;
@@ -46,6 +49,7 @@ namespace GrifindoPS.Commands
             _employeeDataContext.Update(_employee);
 
             MessageBox.Show("Employee details successfully updated.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            _empListNavigationService.Navigate();
         }
     }
 }

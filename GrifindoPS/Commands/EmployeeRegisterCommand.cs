@@ -17,7 +17,7 @@ namespace GrifindoPS.Commands
     internal class EmployeeRegisterCommand : CommandBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<Employee>? _employeeDataService;
+        private readonly IDataService<EmployeeModel> _employeeDataService;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeRegisterCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
@@ -36,18 +36,20 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            Employee employee = new(
-                _employeeDetailsViewModel.Name,
-                _employeeDetailsViewModel.Role,
-                _employeeDetailsViewModel.BOD.Date,
-                _employeeDetailsViewModel.Gender,
-                _employeeDetailsViewModel.Address,
-                _employeeDetailsViewModel.Phone,
-                _employeeDetailsViewModel.Email,
-                _employeeDetailsViewModel.MonthlySalary,
-                _employeeDetailsViewModel.OtRate,
-                _employeeDetailsViewModel.Allowance
-                );
+            EmployeeModel employee = new()
+            {
+                Id = Guid.NewGuid(),
+                Name = _employeeDetailsViewModel.Name,
+                Role = _employeeDetailsViewModel.Role,
+                Birthday = _employeeDetailsViewModel.BOD,
+                Gender = _employeeDetailsViewModel.Gender,
+                Address = _employeeDetailsViewModel.Address,
+                PhoneNo = _employeeDetailsViewModel.Phone,
+                Email = _employeeDetailsViewModel.Email,
+                MonthlySalary = _employeeDetailsViewModel.MonthlySalary,
+                OtRate = _employeeDetailsViewModel.OtRate,
+                Allowance = _employeeDetailsViewModel.Allowance
+            };
 
             try
             {

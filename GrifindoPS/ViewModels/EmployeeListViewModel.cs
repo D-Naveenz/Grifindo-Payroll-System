@@ -17,15 +17,15 @@ namespace GrifindoPS.ViewModels
 {
     internal class EmployeeListViewModel : ViewModelBase
     {
-        private readonly ObservableCollection<EmployeeViewModel> _employees;
+        private readonly ObservableCollection<EmployeeModel> _employees;
         private readonly ConfigStore _config = ConfigStore.Instance;
-        private readonly GrifindoDBContextFactory _grifindoDBContextFactory;
-        private EmployeeViewModel? _selectedEmployeeViewModel;
+        private readonly GrifindoContextFactory _grifindoDBContextFactory;
+        private EmployeeModel? _selectedEmployee;
         
-        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService, GrifindoDBContextFactory grifindoDBContextFactory)
+        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService, GrifindoContextFactory grifindoDBContextFactory)
         {
 
-            _employees = new ObservableCollection<EmployeeViewModel>();
+            _employees = new ObservableCollection<EmployeeModel>();
             _grifindoDBContextFactory = grifindoDBContextFactory;
 
             _config.CurrentEmployee = null;
@@ -39,14 +39,14 @@ namespace GrifindoPS.ViewModels
         private void UpdateEmployees()
         {
             _employees.Clear();
-            using GrifindoDBContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
-            foreach (Employee employee in _dbContext.Employees)
+            using GrifindoContext _dbContext = _grifindoDBContextFactory.CreateDbContext();
+            foreach (EmployeeModel employee in _dbContext.Employee)
             {
-                _employees.Add(new EmployeeViewModel(employee));
+                _employees.Add(employee);
             }
         }
 
-        public IEnumerable<EmployeeViewModel> Employees => _employees;
+        public IEnumerable<EmployeeModel> Employees => _employees;
 
         public ICommand AddCommand { get; }
 
@@ -54,13 +54,13 @@ namespace GrifindoPS.ViewModels
 
         public ICommand DeleteCommand { get; }
 
-        public EmployeeViewModel? SelectedEmployeeViewModel
+        public EmployeeModel? SelectedEmployee
         {
-            get { return _selectedEmployeeViewModel; }
+            get { return _selectedEmployee; }
             set
             {
-                _selectedEmployeeViewModel = value;
-                OnPropertyChanged(nameof(SelectedEmployeeViewModel));
+                _selectedEmployee = value;
+                OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
     }

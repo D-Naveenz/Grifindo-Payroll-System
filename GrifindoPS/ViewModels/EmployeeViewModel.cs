@@ -9,9 +9,9 @@ namespace GrifindoPS.ViewModels
 {
     internal class EmployeeViewModel : ViewModelBase
     {
-        private readonly Employee _employee;
+        private readonly EmployeeModel _employee;
 
-        public EmployeeViewModel(Employee employee)
+        public EmployeeViewModel(EmployeeModel employee)
         {
             _employee = employee;
         }

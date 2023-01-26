@@ -18,7 +18,7 @@ namespace GrifindoPS.Commands
     {
         private readonly LeavesDetailsViewModel _leavesDetailsViewModel;
         private readonly NavigationService _leavesListNavigationService;
-        private readonly IDataService<Leave>? _leaveDataService;
+        private readonly IDataService<LeaveModel> _leaveDataService;
 
         public LeaveRegisterCommand(LeavesDetailsViewModel leavesDetailsViewModel, NavigationService leavesListNavigationService)
         {
@@ -36,12 +36,15 @@ namespace GrifindoPS.Commands
 
         public override void Execute(object? parameter)
         {
-            Leave leave = new(
-                _leavesDetailsViewModel.Date.Date,
-                _leavesDetailsViewModel.Description,
-                _leavesDetailsViewModel.Approval,
-                ConfigStore.Instance.CurrentEmployee
-                );
+            LeaveModel leave = new()
+            {
+                Id = Guid.NewGuid(),
+                Date = _leavesDetailsViewModel.Date,
+                Description = _leavesDetailsViewModel.Description,
+                Approval = _leavesDetailsViewModel.Approval,
+                EmpId = ConfigStore.Instance.CurrentEmployee.Id,
+                Emp = ConfigStore.Instance.CurrentEmployee
+            };
 
             try
             {
