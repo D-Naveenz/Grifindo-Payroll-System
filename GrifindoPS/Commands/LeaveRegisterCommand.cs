@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace GrifindoPS.Commands
 {
-    internal class LeaveRegisterCommand : CommandBase
+    internal class LeaveRegisterCommand : AsyncCommndBase
     {
         private readonly LeavesDetailsViewModel _leavesDetailsViewModel;
         private readonly NavigationService _leavesListNavigationService;
@@ -47,7 +47,29 @@ namespace GrifindoPS.Commands
             try
             {
                 _leaveDataService.Add(leave);
-                ConfigStore.Instance.CurrentLeave = leave;
+
+                MessageBox.Show("The leave is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                _leavesListNavigationService.Navigate();
+            }
+            catch (RecordAlreadyExistingException)
+            {
+                MessageBox.Show("The leave is already existing.", "GrifindoPS: Error - Resource Conflict", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public override async Task ExecuteAsync(object? parameter)
+        {
+            LeaveModel leave = new(
+                Guid.NewGuid(),
+                _leavesDetailsViewModel.Date,
+                _leavesDetailsViewModel.Description,
+                ConfigStore.Instance.CurrentEmployee,
+                _leavesDetailsViewModel.Approval
+                );
+
+            try
+            {
+                await _leaveDataService.Add(leave);
 
                 MessageBox.Show("The leave is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 _leavesListNavigationService.Navigate();

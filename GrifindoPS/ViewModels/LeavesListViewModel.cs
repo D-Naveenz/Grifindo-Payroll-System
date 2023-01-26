@@ -19,37 +19,38 @@ namespace GrifindoPS.ViewModels
 
         private LeaveModel? _selectedLeave;
 
-        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService,
-            GrifindoContextFactory grifindoDBContextFactory)
+        public LeavesListViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService)
         {
             _leaves = new ObservableCollection<LeaveModel>();
-            if (_employee != null)
-            {
-                UpdateLeaves();
-            }
 
+            ConfigStore.Instance.CurrentLeave = null;
+
+            LoadLeavesCommand = new LoadLeavesCommand(this);
             AddCommand = new NavigationCommand(leavesDetailsNavigationService);
             EditCommand = new LeaveEditCommand(this, leavesDetailsNavigationService);
             DeleteCommand = new LeaveDeleteCommand(this, viewModelRefreshService);
             BackCommand = new NavigationCommand(empDetailsNavigationService);
         }
 
-        private void UpdateLeaves()
+        public static LeavesListViewModel LoadViewModel(NavigationService empDetailsNavigationService, NavigationService leavesDetailsNavigationService, NavigationService viewModelRefreshService)
+        {
+            LeavesListViewModel viewModel = new LeavesListViewModel(empDetailsNavigationService, leavesDetailsNavigationService, viewModelRefreshService);
+            viewModel.LoadLeavesCommand.Execute(null);
+            return viewModel;
+        }
+
+        public void UpdateLeaves(IEnumerable<LeaveModel> leaves)
         {
             _leaves.Clear();
-            if (_employee != null)
+            foreach (LeaveModel leave in leaves)
             {
-                foreach (LeaveModel leave in _employeeDataService.GetAllLeaves(_employee).Result)
-                {
-                    if (leave.Emp.Id == _employee.Id)
-                    {
-                        _leaves.Add(leave);
-                    }
-                }
+                _leaves.Add(leave);
             }
         }
 
         public IEnumerable<LeaveModel> Leaves => _leaves;
+
+        public LoadLeavesCommand LoadLeavesCommand { get; }
 
         public ICommand AddCommand { get; }
 

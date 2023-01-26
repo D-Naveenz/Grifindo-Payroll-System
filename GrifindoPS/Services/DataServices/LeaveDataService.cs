@@ -1,12 +1,14 @@
 ﻿using GrifindoPS.DBContexts;
 using GrifindoPS.DTOs;
 using GrifindoPS.Models;
+using GrifindoPS.Stores;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GrifindoPS.Services.DataServices
 {
@@ -21,9 +23,29 @@ namespace GrifindoPS.Services.DataServices
 
         public async Task Add(LeaveModel item)
         {
-            using GrifindoContext dBContext = _dbContextFactory.CreateDbContext();
-            dBContext.Leave.Add(ToEntity(item));
-            await dBContext.SaveChangesAsync();
+            try
+            {
+                using GrifindoContext dBContext = _dbContextFactory.CreateDbContext();
+                var employee = await dBContext.Employee.Include(e => e.Leave).FirstOrDefaultAsync(e => e.Id == item.Emp.Id);
+                if (employee == null)
+                {
+                    throw new Exception("Employee not found");
+                }
+
+                var leave = new Leave
+                {
+                    Date = item.Date,
+                    Description = item.Description,
+                    Approval = item.Approval,
+                    EmpId = employee.Id
+                };
+                dBContext.Leave.Add(leave);
+                await dBContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex);
+            }
         }
 
         public async Task<bool> Delete(LeaveModel item)
@@ -64,7 +86,6 @@ namespace GrifindoPS.Services.DataServices
                 Description = item.Description,
                 Approval = item.Approval,
                 EmpId = item.Emp.Id,
-                Emp = EmployeeDataService.ToEntity(item.Emp)
             };
         }
 

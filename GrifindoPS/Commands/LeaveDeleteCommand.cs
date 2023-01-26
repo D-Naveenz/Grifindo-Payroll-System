@@ -9,10 +9,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GrifindoPS.Commands
 {
-    internal class LeaveDeleteCommand : CommandBase
+    internal class LeaveDeleteCommand : AsyncCommndBase
     {
         private readonly LeavesListViewModel _leavesListViewModel;
         private readonly NavigationService _viewModelRefreshService;
@@ -31,13 +32,28 @@ namespace GrifindoPS.Commands
             return _leavesListViewModel.SelectedLeave != null && base.CanExecute(parameter);
         }
 
-        public override void Execute(object? parameter)
+        public override async void Execute(object? parameter)
         {
-            if (_leavesListViewModel.SelectedLeave != null)
+            try
             {
-                _leaveDataService.Delete(_leavesListViewModel.SelectedLeave);
+                if (_leavesListViewModel.SelectedLeave == null) throw new Exception("Couldn't locate Leave data!");
+
+                LeaveModel leave = _leavesListViewModel.SelectedLeave;
+                await _leaveDataService.Delete(leave);
+                MessageBox.Show("The Leave is successfully deleted.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 _viewModelRefreshService.Navigate();
             }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Delete Leave operation failed!\n" + ex, "GrifindoPS: Error - Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public override Task ExecuteAsync(object? parameter)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

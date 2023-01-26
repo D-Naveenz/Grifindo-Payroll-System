@@ -53,7 +53,6 @@ namespace GrifindoPS.Commands
             try
             {
                 await _employeeDataService.Add(employee);
-                ConfigStore.Instance.CurrentEmployee = employee;
 
                 MessageBox.Show("The Employee is successfully registered.", "GrifindoPS: Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 _empListNavigationService.Navigate();

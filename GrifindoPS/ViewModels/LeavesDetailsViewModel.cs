@@ -17,6 +17,7 @@ namespace GrifindoPS.ViewModels
     {
         private LeaveModel? _leave;
         private ObservableCollection<string> _approvals;
+        private Guid _id;
         private DateTime _date = new(2000, 1, 1);
         private string? _description;
         private string _approval = string.Empty;
@@ -31,6 +32,7 @@ namespace GrifindoPS.ViewModels
             };
 
             _leave = ConfigStore.Instance.CurrentLeave;
+            
             if (_leave == null)
             {
                 // Setup to the registration
@@ -49,6 +51,16 @@ namespace GrifindoPS.ViewModels
             }
 
             CancelCommand = new NavigationCommand(leavesListNavigationService);
+        }
+
+        public Guid Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
         }
 
         public DateTime Date

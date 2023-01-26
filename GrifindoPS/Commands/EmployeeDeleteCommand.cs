@@ -16,15 +16,14 @@ namespace GrifindoPS.Commands
     internal class EmployeeDeleteCommand : AsyncCommndBase
     {
         private readonly EmployeeListViewModel _employeeListViewModel;
-        private readonly ConfigStore _config = ConfigStore.Instance;
         private readonly NavigationService _viewModelRefreshService;
         private readonly IDataService<EmployeeModel> _employeeDataService;
-
+        
         public EmployeeDeleteCommand(EmployeeListViewModel employeeListViewModel, NavigationService viewModelRefreshService)
         {
             _employeeListViewModel = employeeListViewModel;
             _viewModelRefreshService = viewModelRefreshService;
-            _employeeDataService = _config.EmployeeDataService;
+            _employeeDataService = ConfigStore.Instance.EmployeeDataService;
 
             employeeListViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }

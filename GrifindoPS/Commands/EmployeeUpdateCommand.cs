@@ -15,14 +15,13 @@ namespace GrifindoPS.Commands
     internal class EmployeeUpdateCommand : AsyncCommndBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<EmployeeModel> _employeeDataService;
+        private readonly IDataService<EmployeeModel> _employeeDataService = ConfigStore.Instance.EmployeeDataService;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
         {
             _employeeDetailsViewModel = employeeDetailsViewModel;
             _empListNavigationService = empListNavigationService;
-            _employeeDataService = ConfigStore.Instance.EmployeeDataService;
         }
 
         public override async Task ExecuteAsync(object? parameter)

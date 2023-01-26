@@ -66,11 +66,10 @@ namespace GrifindoPS
 
         private LeavesListViewModel CreateLeavesListViewModel()
         {
-            return new LeavesListViewModel(
+            return LeavesListViewModel.LoadViewModel(
                 new NavigationService(_navigationStore, CreateEmpDetailsViewModel), 
                 new NavigationService(_navigationStore, CreateLeavesDetailsViewModel),
-                new NavigationService(_navigationStore, CreateLeavesListViewModel),
-                _dbContextFactory
+                new NavigationService(_navigationStore, CreateLeavesListViewModel)
                 );
         }
 
