@@ -15,7 +15,7 @@ namespace GrifindoPS.Commands
     internal class EmployeeUpdateCommand : AsyncCommndBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<EmployeeModel> _employeeDataService = ConfigStore.Instance.EmployeeDataService;
+        private readonly IDataService<EmployeeModel> _employeeDataService = RuntimeStore.Instance.EmployeeDataService;
         private readonly NavigationService _empListNavigationService;
 
         public EmployeeUpdateCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)

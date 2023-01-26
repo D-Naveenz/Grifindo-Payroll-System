@@ -31,7 +31,7 @@ namespace GrifindoPS.ViewModels
                 "Rejected"
             };
 
-            _leave = ConfigStore.Instance.CurrentLeave;
+            _leave = RuntimeStore.Instance.CurrentLeave;
             
             if (_leave == null)
             {

@@ -15,11 +15,13 @@ namespace GrifindoPS.Commands
     class LoadNoOfAbcents : AsyncCommndBase
     {
         private readonly EmployeeDetailsViewModel _employeeDetailsViewModel;
-        private readonly IDataService<EmployeeModel> _employeeDataService = ConfigStore.Instance.EmployeeDataService;
+        private readonly IDataService<EmployeeModel> _employeeDataService = RuntimeStore.Instance.EmployeeDataService;
+        private readonly TimeSpan _cycleRange;
 
         public LoadNoOfAbcents(EmployeeDetailsViewModel employeeDetailsViewModel)
         {
             _employeeDetailsViewModel = employeeDetailsViewModel;
+            _cycleRange = RuntimeStore.Instance.CycleRange();
         }
 
         public override async Task ExecuteAsync(object? parameter)
@@ -28,14 +30,14 @@ namespace GrifindoPS.Commands
             double _noPay;
             double _basePay;
             double _grossPay;
-            
+
             try
             {
-                var result = await ConfigStore.Instance.EmployeeDataService.GetAllLeaves(ConfigStore.Instance.CurrentEmployee);
+                var result = await RuntimeStore.Instance.EmployeeDataService.GetAllLeaves(RuntimeStore.Instance.CurrentEmployee);
                 _absent = result.Count();
-                _noPay = _employeeDetailsViewModel.MonthlySalary / Config.Instance.CycleRange().Days * _absent;
+                _noPay = _employeeDetailsViewModel.MonthlySalary / _cycleRange.Days * _absent;
                 _basePay = _employeeDetailsViewModel.MonthlySalary + _employeeDetailsViewModel.Allowance + _employeeDetailsViewModel.OtRate * _employeeDetailsViewModel.OtHours;
-                _grossPay = _basePay - (_noPay + Config.Instance.GvtTax);
+                _grossPay = _basePay - (_noPay + RuntimeStore.Instance.ConfigStore.GvtTax);
 
                 _employeeDetailsViewModel.Absent = _absent;
                 _employeeDetailsViewModel.NoPay = _noPay;

@@ -14,8 +14,8 @@ namespace GrifindoPS.ViewModels
     internal class LeavesListViewModel : ViewModelBase
     {
         private readonly ObservableCollection<LeaveModel> _leaves;
-        private readonly EmployeeModel? _employee = ConfigStore.Instance.CurrentEmployee;
-        private readonly EmployeeDataService _employeeDataService = ConfigStore.Instance.EmployeeDataService;
+        private readonly EmployeeModel? _employee = RuntimeStore.Instance.CurrentEmployee;
+        private readonly EmployeeDataService _employeeDataService = RuntimeStore.Instance.EmployeeDataService;
 
         private LeaveModel? _selectedLeave;
 
@@ -23,7 +23,7 @@ namespace GrifindoPS.ViewModels
         {
             _leaves = new ObservableCollection<LeaveModel>();
 
-            ConfigStore.Instance.CurrentLeave = null;
+            RuntimeStore.Instance.CurrentLeave = null;
 
             LoadLeavesCommand = new LoadLeavesCommand(this);
             AddCommand = new NavigationCommand(leavesDetailsNavigationService);

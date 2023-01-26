@@ -82,6 +82,7 @@
                     <Setter Property="Padding" Value="10,4"/>
                 </Style>
             </StackPanel.Resources>
+            <Button Content="Settings" Command="{Binding SettingsCommand}"/>
             <Button Content="Delete" Command="{Binding DeleteCommand}"/>
             <Button Content="Edit" Command="{Binding EditCommand}"/>
             <Button Content="Add" Command="{Binding AddCommand}"/>

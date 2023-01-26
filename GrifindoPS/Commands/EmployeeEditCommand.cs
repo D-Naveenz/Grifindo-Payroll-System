@@ -15,7 +15,7 @@ namespace GrifindoPS.Commands
     internal class EmployeeEditCommand : CommandBase
     {
         private readonly EmployeeListViewModel _employeeListViewModel;
-        private readonly ConfigStore _config = ConfigStore.Instance;
+        private readonly RuntimeStore _config = RuntimeStore.Instance;
         private readonly NavigationService _empDetailsNavigationService;
 
         public EmployeeEditCommand(EmployeeListViewModel employeeListViewModel, NavigationService empDetailsNavigationService)

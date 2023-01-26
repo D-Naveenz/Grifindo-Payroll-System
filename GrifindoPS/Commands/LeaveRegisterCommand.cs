@@ -24,7 +24,7 @@ namespace GrifindoPS.Commands
         {
             _leavesDetailsViewModel = leavesDetailsViewModel;
             _leavesListNavigationService = leavesListNavigationService;
-            _leaveDataService = ConfigStore.Instance.LeaveDataService;
+            _leaveDataService = RuntimeStore.Instance.LeaveDataService;
 
             leavesDetailsViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -40,7 +40,7 @@ namespace GrifindoPS.Commands
                 Guid.NewGuid(),
                 _leavesDetailsViewModel.Date,
                 _leavesDetailsViewModel.Description,
-                ConfigStore.Instance.CurrentEmployee,
+                RuntimeStore.Instance.CurrentEmployee,
                 _leavesDetailsViewModel.Approval
                 );
 
@@ -63,7 +63,7 @@ namespace GrifindoPS.Commands
                 Guid.NewGuid(),
                 _leavesDetailsViewModel.Date,
                 _leavesDetailsViewModel.Description,
-                ConfigStore.Instance.CurrentEmployee,
+                RuntimeStore.Instance.CurrentEmployee,
                 _leavesDetailsViewModel.Approval
                 );
 

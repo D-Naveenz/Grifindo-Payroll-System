@@ -14,7 +14,7 @@ namespace GrifindoPS.Commands
 {
     internal class LeaveEditCommand : CommandBase
     {
-        private readonly ConfigStore _config = ConfigStore.Instance;
+        private readonly RuntimeStore _config = RuntimeStore.Instance;
         private readonly LeavesListViewModel _leavesListViewModel;
         private readonly NavigationService _leavesDetailsNavigationService;
 

@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -21,23 +23,23 @@ namespace GrifindoPS
     {
         private readonly NavigationStore _navigationStore;
         private readonly GrifindoContextFactory _dbContextFactory;
-        private const string CONNECTIONSTR = "Data Source=(local);Initial Catalog=GrifindoPS;Integrated Security=True;TrustServerCertificate=True;";
 
         public App()
         {
+            InitConfig();
+
+            // Loading config from file
+            ConfigStore? _configs = ConfigStore.Load();
+
             _navigationStore = new();
-            _dbContextFactory = new(CONNECTIONSTR);
-            ConfigStore.Initialize(_dbContextFactory);
+            _dbContextFactory = new(_configs.ConnectionString);
+            
+            RuntimeStore.Initialize(_dbContextFactory, _configs);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             _navigationStore.CurrentViewModel = CreateEmpListViewModel();
-
-            //using (GrifindoContext dBContext = _dbContextFactory.CreateDbContext())
-            //{
-            //    dBContext.Database.Migrate();
-            //}
 
             var window = new MainWindow
             {
@@ -59,7 +61,8 @@ namespace GrifindoPS
         private EmployeeListViewModel CreateEmpListViewModel()
         {
             return EmployeeListViewModel.LoadViewModel(
-                new NavigationService(_navigationStore, CreateEmpDetailsViewModel), 
+                new NavigationService(_navigationStore, CreateEmpDetailsViewModel),
+                new NavigationService(_navigationStore, CreateSettingsViewModel),
                 new NavigationService(_navigationStore, CreateEmpListViewModel)
                 );
         }
@@ -77,5 +80,39 @@ namespace GrifindoPS
         {
             return new LeavesDetailsViewModel(new NavigationService(_navigationStore, CreateLeavesListViewModel));
         }
+
+        private SettingsViewModel CreateSettingsViewModel()
+        {
+            return new SettingsViewModel(new NavigationService(_navigationStore, CreateEmpListViewModel));
+        }
+
+        private void InitConfig()
+        {
+            if (!File.Exists("config.json"))
+            {
+                // Create a new AppConfiguration object with default values
+                ConfigStore configs = new(
+                "Data Source=(local);Initial Catalog=GrifindoPS;Integrated Security=True;TrustServerCertificate=True;",
+                new DateTime(2023, 1, 1),
+                new DateTime(2023, 1, 31),
+                210000
+                );
+
+                // Serialize the AppConfiguration object into a JSON string
+                string json = JsonSerializer.Serialize(configs);
+
+                // Create a new "config.json" file and write the JSON string to it
+                File.WriteAllText("config.json", json);
+            }
+
+        }
+
+        //private void MigrateDB()
+        //{
+        //    using (GrifindoContext dBContext = _dbContextFactory.CreateDbContext())
+        //    {
+        //        dBContext.Database.Migrate();
+        //    }
+        //}
     }
 }

@@ -21,6 +21,9 @@
             <DataTemplate DataType="{x:Type viewmodels:LeavesDetailsViewModel}">
                 <views:LeavesDetailsView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+                <views:SettingsView />
+            </DataTemplate>
         </Grid.Resources>
 
         <ContentControl Content="{Binding CurrentViewModel}" />
