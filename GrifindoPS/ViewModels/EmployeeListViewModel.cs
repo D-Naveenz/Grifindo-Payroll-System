@@ -20,22 +20,23 @@ namespace GrifindoPS.ViewModels
         private readonly ObservableCollection<EmployeeModel> _employees;
         private EmployeeModel? _selectedEmployee;
         
-        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
+        public EmployeeListViewModel(NavigationService empDetailsNavigationService, NavigationService settingsNavigationService, NavigationService viewModelRefreshService)
         {
 
             _employees = new ObservableCollection<EmployeeModel>();
 
-            ConfigStore.Instance.CurrentEmployee = null;
+            RuntimeStore.Instance.CurrentEmployee = null;
 
             LoadEmployeesCommand = new LoadEmployeesCommand(this);
             AddCommand = new NavigationCommand(empDetailsNavigationService);
             EditCommand = new EmployeeEditCommand(this, empDetailsNavigationService);
             DeleteCommand = new EmployeeDeleteCommand(this, viewModelRefreshService);
+            SettingsCommand = new NavigationCommand(settingsNavigationService);
         }
 
-        public static EmployeeListViewModel LoadViewModel(NavigationService empDetailsNavigationService, NavigationService viewModelRefreshService)
+        public static EmployeeListViewModel LoadViewModel(NavigationService empDetailsNavigationService, NavigationService settingsNavigationService, NavigationService viewModelRefreshService)
         {
-            EmployeeListViewModel viewModel = new EmployeeListViewModel(empDetailsNavigationService, viewModelRefreshService);
+            EmployeeListViewModel viewModel = new EmployeeListViewModel(empDetailsNavigationService, settingsNavigationService, viewModelRefreshService);
             viewModel.LoadEmployeesCommand.Execute(null);
             return viewModel;
         }
@@ -58,6 +59,8 @@ namespace GrifindoPS.ViewModels
         public ICommand EditCommand { get; }
 
         public ICommand DeleteCommand { get; }
+
+        public ICommand SettingsCommand { get; }
 
         public EmployeeModel? SelectedEmployee
         {

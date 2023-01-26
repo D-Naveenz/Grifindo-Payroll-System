@@ -23,7 +23,7 @@ namespace GrifindoPS.Commands
         {
             _employeeListViewModel = employeeListViewModel;
             _viewModelRefreshService = viewModelRefreshService;
-            _employeeDataService = ConfigStore.Instance.EmployeeDataService;
+            _employeeDataService = RuntimeStore.Instance.EmployeeDataService;
 
             employeeListViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }

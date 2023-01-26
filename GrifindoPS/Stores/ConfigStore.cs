@@ -1,52 +1,40 @@
-﻿using GrifindoPS.DBContexts;
-using GrifindoPS.Models;
-using GrifindoPS.Services.DataServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace GrifindoPS.Stores
 {
     internal class ConfigStore
     {
-        private static bool hasInstance = false;
-        private static ConfigStore _instance;
-        private GrifindoContextFactory _grifindoContextFactory;
-        
-        private ConfigStore(GrifindoContextFactory grifindoContextFactory)
+        public ConfigStore(string connectionString, DateTime cycleBegin, DateTime cycleEnd, float gvtTax)
         {
-            _grifindoContextFactory = grifindoContextFactory;
-            EmployeeDataService = new EmployeeDataService(_grifindoContextFactory);
-            LeaveDataService = new LeaveDataService(_grifindoContextFactory);
+            ConnectionString = connectionString;
+            CycleBegin = cycleBegin;
+            CycleEnd = cycleEnd;
+            GvtTax = gvtTax;
         }
 
-        public static ConfigStore Instance
+        public string ConnectionString { get; set; }
+        public DateTime CycleBegin { get; set; }
+        public DateTime CycleEnd { get; set; }
+        public float GvtTax { get; set; }
+
+        public static ConfigStore Load()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    throw new Exception("Config Store is not initialized yet.");
-                }
-                return _instance;
-            }
+            // Read the JSON file and deserialize it into an AppConfiguration object
+            string json = File.ReadAllText("config.json");
+            return JsonSerializer.Deserialize<ConfigStore>(json);
         }
 
-        public static void Initialize(GrifindoContextFactory grifindoContextFactory)
+        public void Save()
         {
-            if (_instance == null)
-            {
-                _instance = new ConfigStore(grifindoContextFactory);
-            }
+            // Serialize the AppConfiguration object into a JSON string
+            string json = JsonSerializer.Serialize(this);
+            File.WriteAllText("config.json", json);
         }
-
-        public EmployeeDataService EmployeeDataService { get; }
-        public EmployeeModel CurrentEmployee { get; set; }
-        public LeaveDataService LeaveDataService { get; }
-        public LeaveModel CurrentLeave { get; set; }
-        
     }
 }

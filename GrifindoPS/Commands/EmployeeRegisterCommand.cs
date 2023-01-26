@@ -23,7 +23,7 @@ namespace GrifindoPS.Commands
         public EmployeeRegisterCommand(EmployeeDetailsViewModel employeeDetailsViewModel, NavigationService empListNavigationService)
         {
             _employeeDetailsViewModel = employeeDetailsViewModel;
-            _employeeDataService = ConfigStore.Instance.EmployeeDataService;
+            _employeeDataService = RuntimeStore.Instance.EmployeeDataService;
             _empListNavigationService = empListNavigationService;
 
             employeeDetailsViewModel.PropertyChanged += OnViewModelPropertyChanged;

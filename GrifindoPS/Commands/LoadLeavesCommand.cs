@@ -15,7 +15,7 @@ namespace GrifindoPS.Commands
     class LoadLeavesCommand : AsyncCommndBase
     {
         private readonly LeavesListViewModel _leaveListViewModel;
-        private readonly EmployeeDataService _employeeDataService = ConfigStore.Instance.EmployeeDataService;
+        private readonly EmployeeDataService _employeeDataService = RuntimeStore.Instance.EmployeeDataService;
 
         public LoadLeavesCommand(LeavesListViewModel leaveListViewModel)
         {
@@ -26,7 +26,7 @@ namespace GrifindoPS.Commands
         {
             try
             {
-                IEnumerable<LeaveModel> leaves = await _employeeDataService.GetAllLeaves(ConfigStore.Instance.CurrentEmployee);
+                IEnumerable<LeaveModel> leaves = await _employeeDataService.GetAllLeaves(RuntimeStore.Instance.CurrentEmployee);
                 _leaveListViewModel.UpdateLeaves(leaves);
             }
             catch (Exception ex)

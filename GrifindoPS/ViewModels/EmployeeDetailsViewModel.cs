@@ -37,7 +37,7 @@ namespace GrifindoPS.ViewModels
 
         public EmployeeDetailsViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
         {
-            _employee = ConfigStore.Instance.CurrentEmployee;
+            _employee = RuntimeStore.Instance.CurrentEmployee;
 
             if (_employee == null)
             {
@@ -88,7 +88,7 @@ namespace GrifindoPS.ViewModels
         public static EmployeeDetailsViewModel LoadViewModel(NavigationService empListNavigationService, NavigationService leavesNavigationService)
         {
             EmployeeDetailsViewModel viewModel = new(empListNavigationService, leavesNavigationService);
-            if (ConfigStore.Instance.CurrentEmployee != null) viewModel.LoadAbcentsCommand.Execute(null);
+            if (RuntimeStore.Instance.CurrentEmployee != null) viewModel.LoadAbcentsCommand.Execute(null);
             return viewModel;
         }
 

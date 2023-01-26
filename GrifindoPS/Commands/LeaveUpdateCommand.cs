@@ -16,7 +16,7 @@ namespace GrifindoPS.Commands
 {
     internal class LeaveUpdateCommand : CommandBase
     {
-        private readonly IDataService<LeaveModel> _leaveDataService = ConfigStore.Instance.LeaveDataService;
+        private readonly IDataService<LeaveModel> _leaveDataService = RuntimeStore.Instance.LeaveDataService;
         private readonly LeavesDetailsViewModel _leavesDetailsViewModel;
         private readonly NavigationService _leavesListNavigationService;
 
@@ -32,7 +32,7 @@ namespace GrifindoPS.Commands
                 _leavesDetailsViewModel.Id,
                 _leavesDetailsViewModel.Date,
                 _leavesDetailsViewModel.Description,
-                ConfigStore.Instance.CurrentEmployee,
+                RuntimeStore.Instance.CurrentEmployee,
                 _leavesDetailsViewModel.Approval
                 );
 
